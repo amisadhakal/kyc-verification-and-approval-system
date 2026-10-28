@@ -12,7 +12,7 @@ export default function PrintView({ id }: { id: string }) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-slate-100 p-6 text-center">
         <p className="font-bold text-slate-700">KYC form not found.</p>
-        <button onClick={() => navigate("/admin")} className="rounded-2xl bg-emerald-600 px-6 py-3 font-bold text-white">
+        <button onClick={() => navigate("/admin")} className="rounded-2xl bg-amber-600 px-6 py-3 font-bold text-white">
           Back to Dashboard
         </button>
       </div>
@@ -34,7 +34,7 @@ export default function PrintView({ id }: { id: string }) {
           >
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
-          <button onClick={doPrint} className="flex-1 rounded-xl bg-emerald-600 px-4 py2 text-sm font-bold text-white">
+          <button onClick={doPrint} className="flex-1 rounded-xl bg-amber-600 px-4 py2 text-sm font-bold text-white">
             <span className="flex items-center justify-center gap-2">
               <Printer className="h-4 w-4" /> Mark as Printed & Print PDF
             </span>
@@ -43,11 +43,11 @@ export default function PrintView({ id }: { id: string }) {
       </div>
 
       <div className="print-area mx-auto max-w-3xl bg-white p-6 shadow-2xl">
-        <div className="border-b-2 border-emerald-800 pb-4 text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Sangam Cooperative Society</p>
+        <div className="border-b-2 border-amber-800 pb-4 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-700">Sangam Cooperative Society</p>
           <h1 className="mt-1 text-2xl font-extrabold text-slate-900">Know Your Member (KYC) Form</h1>
           <p className="mt-0.5 text-xs font-semibold text-slate-500">
-            Form No: {sub.membershipCode} · Status: <span className="text-emerald-700">Approved</span>
+            Form No: {sub.membershipCode} · Status: <span className="text-amber-700">Approved</span>
           </p>
         </div>
 
@@ -125,8 +125,8 @@ export default function PrintView({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="no-print mx-auto mt-4 max-w-3xl rounded-2xl bg-emerald-950 p-4 text-center">
-        <p className="flex items-center justify-center gap-2 text-sm font-bold text-emerald-100">
+      <div className="no-print mx-auto mt-4 max-w-3xl rounded-2xl bg-amber-950 p-4 text-center">
+        <p className="flex items-center justify-center gap-2 text-sm font-bold text-amber-100">
           <CheckCircle2 className="h-5 w-5" /> KYC {sub.membershipCode} for {sub.memberName} approved — ready to print.
         </p>
       </div>

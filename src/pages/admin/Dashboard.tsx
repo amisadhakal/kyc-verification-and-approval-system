@@ -44,9 +44,9 @@ export default function Dashboard() {
   const cards = [
     { label: "Pending Review", value: stats.pending, icon: Clock, cls: "bg-amber-50 text-amber-600" },
     { label: "Awaiting Action", value: stats.submitted, icon: AlertTriangle, cls: "bg-indigo-50 text-indigo-600" },
-    { label: "Approved", value: stats.approved, icon: CheckCircle2, cls: "bg-emerald-50 text-emerald-600" },
+    { label: "Approved", value: stats.approved, icon: CheckCircle2, cls: "bg-orange-50 text-orange-600" },
     { label: "Rejected", value: stats.rejected, icon: XCircle, cls: "bg-red-50 text-red-500" },
-    { label: "Printed", value: stats.printed, icon: Printer, cls: "bg-teal-50 text-teal-600" },
+    { label: "Printed", value: stats.printed, icon: Printer, cls: "bg-orange-50 text-orange-600" },
     { label: "Members Added", value: stats.members, icon: UsersIcon, cls: "bg-slate-100 text-slate-600" },
   ];
 
@@ -98,7 +98,7 @@ export default function Dashboard() {
               onClick={() => setFilter(f.key)}
               className={`rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition ${
                 filter === f.key
-                  ? "bg-emerald-700 text-white shadow"
+                  ? "bg-amber-700 text-white shadow"
                   : "bg-white text-slate-600 border border-slate-200"
               }`}
             >
@@ -164,7 +164,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
           <>
             <button
               onClick={() => approveSubmission(sub.id)}
-              className="flex-1 rounded-xl bg-emerald-600 px-3 py-2 text-sm font-bold text-white"
+              className="flex-1 rounded-xl bg-amber-600 px-3 py-2 text-sm font-bold text-white"
             >
               Approve
             </button>
@@ -179,7 +179,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
         {sub.status === "approved" && (
           <button
             onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-            className="flex-1 rounded-xl bg-teal-600 px-3 py-2 text-sm font-bold text-white"
+            className="flex-1 rounded-xl bg-orange-600 px-3 py-2 text-sm font-bold text-white"
           >
             Print
           </button>

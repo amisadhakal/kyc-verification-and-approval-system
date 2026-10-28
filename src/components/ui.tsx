@@ -23,10 +23,10 @@ const STATUS_STYLES: Record<string, { pill: string; dot: string; text: string; b
     bg: "bg-amber-50",
   },
   approved: {
-    pill: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    dot: "bg-emerald-600",
-    text: "text-emerald-700",
-    bg: "bg-emerald-50",
+    pill: "bg-orange-50 text-orange-700 border-orange-200",
+    dot: "bg-orange-600",
+    text: "text-orange-700",
+    bg: "bg-orange-50",
   },
   rejected: {
     pill: "bg-red-50 text-red-600 border-red-200",
@@ -35,10 +35,10 @@ const STATUS_STYLES: Record<string, { pill: string; dot: string; text: string; b
     bg: "bg-red-50",
   },
   printed: {
-    pill: "bg-teal-50 text-teal-700 border-teal-200",
-    dot: "bg-teal-600",
-    text: "text-teal-700",
-    bg: "bg-teal-50",
+    pill: "bg-orange-50 text-orange-700 border-orange-200",
+    dot: "bg-orange-600",
+    text: "text-orange-700",
+    bg: "bg-orange-50",
   },
 };
 
@@ -58,7 +58,7 @@ export function StatusIcon({ status, className = "h-5 w-5" }: { status: KycStatu
   switch (status) {
     case "approved":
     case "printed":
-      return <FileText className={`${className} text-emerald-600`} />;
+      return <FileText className={`${className} text-amber-600`} />;
     case "rejected":
       return <XCircle className={`${className} text-red-500`} />;
     case "pending":
@@ -93,9 +93,9 @@ export function StatusStepper({ status }: { status: KycStatus }) {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
                   state === "done"
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-amber-600 text-white"
                     : state === "current"
-                    ? "bg-emerald-600 text-white ring-4 ring-emerald-100"
+                    ? "bg-amber-600 text-white ring-4 ring-amber-100"
                     : "bg-slate-200 text-slate-500"
                 }`}
               >
@@ -103,14 +103,14 @@ export function StatusStepper({ status }: { status: KycStatus }) {
               </div>
               <span
                 className={`text-[10px] font-semibold uppercase tracking-wide ${
-                  state === "current" || state === "done" ? "text-emerald-700" : "text-slate-400"
+                  state === "current" || state === "done" ? "text-amber-700" : "text-slate-400"
                 }`}
               >
                 {labels[i]}
               </span>
             </div>
             {i < KYC_FLOW.length - 1 && (
-              <div className={`mx-1 h-0.5 flex-1 ${i < currentIdx ? "bg-emerald-600" : "bg-slate-200"}`} />
+              <div className={`mx-1 h-0.5 flex-1 ${i < currentIdx ? "bg-amber-600" : "bg-slate-200"}`} />
             )}
           </li>
         );
@@ -124,7 +124,7 @@ export function Avatar({ name, size = "md" }: { name: string; size?: "sm" | "md"
   const parts = name.trim().split(/\s+/);
   const initial = (parts[0]?.[0] ?? "?").toUpperCase() + (parts[1]?.[0] ?? "").toUpperCase();
   return (
-    <div className={`${sizes} shrink-0 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-bold text-white`}>
+    <div className={`${sizes} shrink-0 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-bold text-white`}>
       {initial}
     </div>
   );

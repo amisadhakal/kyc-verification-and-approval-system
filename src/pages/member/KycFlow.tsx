@@ -65,7 +65,7 @@ export default function KycFlow({ code }: { code: string }) {
 
   if (step === "loading") {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-emerald-700">
+      <div className="flex min-h-dvh items-center justify-center bg-amber-700">
         <Loader2 className="h-10 w-10 animate-spin text-white" />
       </div>
     );
@@ -73,7 +73,7 @@ export default function KycFlow({ code }: { code: string }) {
 
   if (step === "invalid") {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-emerald-50 p-6 text-center">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-amber-50 p-6 text-center">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
           <Smartphone className="h-10 w-10 text-red-500" />
         </div>
@@ -84,7 +84,7 @@ export default function KycFlow({ code }: { code: string }) {
         </p>
         <button
           onClick={() => navigate("/admin")}
-          className="mt-2 rounded-2xl bg-emerald-600 px-6 py-3 font-semibold text-white"
+          className="mt-2 rounded-2xl bg-amber-600 px-6 py-3 font-semibold text-white"
         >
           Go to Portal
         </button>
@@ -100,17 +100,17 @@ export default function KycFlow({ code }: { code: string }) {
 
   if (step === "success" && member) {
     return (
-      <div className="min-h-dvh bg-emerald-50 pb-10">
+      <div className="min-h-dvh bg-amber-50 pb-10">
         <div className="mx-auto flex max-w-md flex-col items-center px-6 pt-16 text-center">
-          <div className="animate-pop flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100">
-            <CheckCircle2 className="h-14 w-14 text-emerald-600" />
+          <div className="animate-pop flex h-24 w-24 items-center justify-center rounded-full bg-amber-100">
+            <CheckCircle2 className="h-14 w-14 text-amber-600" />
           </div>
           <h1 className="mt-6 text-2xl font-extrabold text-slate-900">KYC Submitted!</h1>
           <p className="mt-2 text-sm text-slate-500">
             Thank you, <span className="font-semibold text-slate-700">{member.name}</span>. Your KYC details
             have been received and are pending manager review.
           </p>
-          <div className="mt-6 w-full rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+          <div className="mt-6 w-full rounded-2xl border border-amber-100 bg-white p-5 shadow-sm">
             <dl className="space-y-2 text-left text-sm">
               <div className="flex justify-between">
                 <dt className="text-slate-500">Member Code</dt>
@@ -124,7 +124,7 @@ export default function KycFlow({ code }: { code: string }) {
           </div>
           <button
             onClick={() => navigate("/admin")}
-            className="mt-8 w-full rounded-2xl bg-emerald-600 py-4 font-bold text-white shadow-lg shadow-emerald-200"
+            className="mt-8 w-full rounded-2xl bg-amber-600 py-4 font-bold text-white shadow-lg shadow-amber-200"
           >
             Back to Portal
           </button>
@@ -136,14 +136,14 @@ export default function KycFlow({ code }: { code: string }) {
   // OTP step
   if (step === "otp" && member) {
     return (
-      <div className="min-h-dvh bg-gradient-to-b from-emerald-700 via-emerald-600 to-emerald-50">
+      <div className="min-h-dvh bg-gradient-to-b from-amber-700 via-amber-600 to-amber-50">
         <div className="mx-auto flex max-w-md flex-col px-6 pt-14">
           <div className="flex flex-col items-center text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur">
               <ShieldCheck className="h-9 w-9 text-white" />
             </div>
             <h1 className="mt-5 text-2xl font-extrabold text-white">Verify OTP</h1>
-            <p className="mt-1 text-sm text-emerald-50/90">
+            <p className="mt-1 text-sm text-amber-50/90">
               Hi {member.name}, enter the verification code sent to your phone
             </p>
           </div>
@@ -183,8 +183,8 @@ export default function KycFlow({ code }: { code: string }) {
                     setOtp(next);
                     firstOtpRef.current?.focus(Math.min(text.length, 5));
                   }}
-                  className={`h-13 w-11 rounded-xl border bg-slate-50 text-center text-xl font-bold text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 ${
-                    otp[i] ? "border-emerald-500 bg-emerald-50" : "border-slate-200"
+                  className={`h-13 w-11 rounded-xl border bg-slate-50 text-center text-xl font-bold text-slate-900 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-100 ${
+                    otp[i] ? "border-amber-500 bg-amber-50" : "border-slate-200"
                   }`}
                 />
               ))}
@@ -201,17 +201,17 @@ export default function KycFlow({ code }: { code: string }) {
                 setOtpError("");
                 setStep("form");
               }}
-              className="mt-5 w-full rounded-2xl bg-emerald-600 py-4 text-base font-bold text-white shadow-lg shadow-emerald-200"
+              className="mt-5 w-full rounded-2xl bg-amber-600 py-4 text-base font-bold text-white shadow-lg shadow-amber-200"
             >
               Verify & Continue
             </button>
 
-            <div className="mt-5 rounded-2xl bg-emerald-50 p-3 text-center">
-              <p className="text-xs text-emerald-800">
+            <div className="mt-5 rounded-2xl bg-amber-50 p-3 text-center">
+              <p className="text-xs text-amber-800">
                 Demo mode — your OTP is <span className="font-extrabold tracking-widest">{member.otp}</span>
               </p>
               {secondsLeft > 0 ? (
-                <p className="mt-1 text-xs text-emerald-700">Resend code in {secondsLeft}s</p>
+                <p className="mt-1 text-xs text-amber-700">Resend code in {secondsLeft}s</p>
               ) : (
                 <button
                   onClick={() => {
@@ -219,7 +219,7 @@ export default function KycFlow({ code }: { code: string }) {
                     setOtp(["", "", "", "", "", ""]);
                     setSecondsLeft(30);
                   }}
-                  className="mt-1 text-xs font-bold text-emerald-700 underline underline-offset-2"
+                  className="mt-1 text-xs font-bold text-amber-700 underline underline-offset-2"
                 >
                   Resend code
                 </button>
@@ -227,7 +227,7 @@ export default function KycFlow({ code }: { code: string }) {
             </div>
           </div>
 
-          <button onClick={() => navigate("/admin")} className="mt-6 text-sm font-semibold text-emerald-900/70">
+          <button onClick={() => navigate("/admin")} className="mt-6 text-sm font-semibold text-amber-900/70">
             ← Back to Portal
           </button>
         </div>
@@ -267,7 +267,7 @@ export default function KycFlow({ code }: { code: string }) {
 
     return (
       <div className="min-h-dvh bg-slate-50 pb-28">
-        <div className="sticky top-0 z-10 border-b border-emerald-100 bg-white/90 backdrop-blur">
+        <div className="sticky top-0 z-10 border-b border-amber-100 bg-white/90 backdrop-blur">
           <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-3">
             <button onClick={() => setStep("otp")} className="rounded-full bg-slate-100 p-2 text-slate-600">
               <ArrowLeft className="h-5 w-5" />
@@ -299,7 +299,7 @@ export default function KycFlow({ code }: { code: string }) {
                   onChange={(e) => setAddress(e.target.value)}
                   rows={3}
                   placeholder="House no, street, city, district"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-100"
                 />
               </Field>
             </div>
@@ -326,7 +326,7 @@ export default function KycFlow({ code }: { code: string }) {
                     onClick={() => setIdDocType(t)}
                     className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                       idDocType === t
-                        ? "border-emerald-600 bg-emerald-600 text-white"
+                        ? "border-amber-600 bg-amber-600 text-white"
                         : "border-slate-200 bg-white text-slate-600"
                     }`}
                   >
@@ -351,7 +351,7 @@ export default function KycFlow({ code }: { code: string }) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-base font-bold text-white shadow-lg shadow-emerald-200 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-600 py-4 text-base font-bold text-white shadow-lg shadow-amber-200 disabled:opacity-60"
             >
               {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <CheckCircle2 className="h-5 w-5" />}
               {submitting ? "Submitting…" : "Submit KYC"}
@@ -407,11 +407,11 @@ function PhotoPicker({
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="flex w-full flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-emerald-300 bg-emerald-50/60 py-8"
+          className="flex w-full flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/60 py-8"
         >
-          <Camera className="h-8 w-8 text-emerald-600" />
-          <span className="text-sm font-semibold text-emerald-800">Tap to upload {label}</span>
-          {hint && <span className="text-xs text-emerald-700/70">{hint}</span>}
+          <Camera className="h-8 w-8 text-amber-600" />
+          <span className="text-sm font-semibold text-amber-800">Tap to upload {label}</span>
+          {hint && <span className="text-xs text-amber-700/70">{hint}</span>}
         </button>
       )}
       <input
@@ -440,16 +440,16 @@ function MemberStatus({ member }: { member: Member }) {
     printed: "Your KYC was approved and the printed KYC form has been generated.",
   };
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-emerald-50 p-6 text-center">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-        <CheckCircle2 className="h-10 w-10 text-emerald-600" />
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-amber-50 p-6 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-100">
+        <CheckCircle2 className="h-10 w-10 text-amber-600" />
       </div>
       <h1 className="text-2xl font-extrabold text-slate-900">{STATUS_LABEL[member.status]}</h1>
       <p className="max-w-xs text-sm text-slate-500">{statusMessages[member.status]}</p>
       <StatusPill status={member.status} />
       <button
         onClick={() => navigate("/admin")}
-        className="mt-2 rounded-2xl bg-emerald-600 px-6 py-3 font-semibold text-white"
+        className="mt-2 rounded-2xl bg-amber-600 px-6 py-3 font-semibold text-white"
       >
         Go to Portal
       </button>

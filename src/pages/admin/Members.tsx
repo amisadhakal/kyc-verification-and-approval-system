@@ -61,10 +61,10 @@ export default function Members() {
           }}
           onClick={() => fileRef.current?.click()}
           className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
-            dragOver ? "border-emerald-500 bg-emerald-50" : "border-slate-300 bg-slate-50"
+            dragOver ? "border-amber-500 bg-amber-50" : "border-slate-300 bg-slate-50"
           }`}
         >
-          <Upload className={`h-9 w-9 ${dragOver ? "text-emerald-600" : "text-slate-400"}`} />
+          <Upload className={`h-9 w-9 ${dragOver ? "text-amber-600" : "text-slate-400"}`} />
           <p className="text-sm font-bold text-slate-700">Drag & drop member list (CSV)</p>
           <p className="text-xs text-slate-400">or click to browse — columns: Name, Phone Number, Membership Code</p>
           <input
@@ -103,7 +103,7 @@ export default function Members() {
                   setParsed(null);
                   setFileName("");
                 }}
-                className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white"
+                className="flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-sm font-bold text-white"
               >
                 <Plus className="h-4 w-4" /> Add {parsed.rows.length} Members
               </button>
@@ -142,20 +142,20 @@ export default function Members() {
 
       <form onSubmit={submitManual} className="rounded-3xl bg-white p-5 shadow-sm border border-slate-100">
         <h3 className="flex items-center gap-2 text-base font-bold text-slate-900">
-          <UserPlus className="h-5 w-5 text-emerald-600" /> Add Member Manually
+          <UserPlus className="h-5 w-5 text-amber-600" /> Add Member Manually
         </h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <Field label="Full Name" required>
-            <input required value={manual.name} onChange={(e) => setManual({ ...manual, name: e.target.value })} placeholder="Ram Sharma" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            <input required value={manual.name} onChange={(e) => setManual({ ...manual, name: e.target.value })} placeholder="Ram Sharma" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" />
           </Field>
           <Field label="Phone Number" required>
-            <input required value={manual.phone} onChange={(e) => setManual({ ...manual, phone: e.target.value })} placeholder="919812345678" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            <input required value={manual.phone} onChange={(e) => setManual({ ...manual, phone: e.target.value })} placeholder="919812345678" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" />
           </Field>
           <Field label="Membership Code">
-            <input value={manual.membershipCode} onChange={(e) => setManual({ ...manual, membershipCode: e.target.value })} placeholder="MEM006" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            <input value={manual.membershipCode} onChange={(e) => setManual({ ...manual, membershipCode: e.target.value })} placeholder="MEM006" className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" />
           </Field>
         </div>
-        <button type="submit" className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white sm:w-auto sm:px-8">
+        <button type="submit" className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 py-3 text-sm font-bold text-white sm:w-auto sm:px-8">
           <Plus className="h-4 w-4" /> Add Member
         </button>
         {notice && <p className="mt-3 text-xs font-medium text-amber-700">{notice}</p>}
@@ -163,7 +163,7 @@ export default function Members() {
 
       <div className="rounded-3xl bg-white p-5 shadow-sm border border-slate-100">
         <h3 className="flex items-center gap-2 text-base font-bold text-slate-900">
-          <UsersIcon className="h-5 w-5 text-emerald-600" /> All Members ({members.length})
+          <UsersIcon className="h-5 w-5 text-amber-600" /> All Members ({members.length})
         </h3>
         <div className="mt-4 space-y-2">
           {members.length === 0 && <p className="py-6 text-center text-sm text-slate-400">No members added yet.</p>}
@@ -197,7 +197,7 @@ export default function Members() {
       </div>
 
       {notice && !parsed && (
-        <div className="flex items-center gap-2 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+        <div className="flex items-center gap-2 rounded-2xl bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
           <CheckCircle2 className="h-5 w-5" /> Members added successfully.
         </div>
       )}

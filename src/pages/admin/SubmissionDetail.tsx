@@ -16,7 +16,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
       <div className="rounded-3xl bg-white p-8 text-center shadow-sm border border-slate-100">
         <FileText className="mx-auto h-10 w-10 text-slate-300" />
         <p className="mt-3 font-bold text-slate-700">Submission not found</p>
-        <button onClick={() => navigate("/admin")} className="mt-4 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white">
+        <button onClick={() => navigate("/admin")} className="mt-4 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-bold text-white">
           Back to Dashboard
         </button>
       </div>
@@ -121,7 +121,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
           <>
             <button
               onClick={act(() => approveSubmission(sub.id))}
-              className="flex-1 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-sm"
+              className="flex-1 rounded-2xl bg-amber-600 px-4 py-3 text-sm font-bold text-white shadow-sm"
             >
               <span className="flex items-center justify-center gap-2">
                 <CheckCircle2 className="h-4 w-4" /> Approve
@@ -146,13 +146,13 @@ export default function SubmissionDetail({ id }: { id: string }) {
               markPrinted(sub.id);
               window.print();
             })}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white shadow-sm"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-700 px-4 py-3 text-sm font-bold text-white shadow-sm"
           >
             <Printer className="h-4 w-4" /> Print Approved KYC Form
           </button>
         )}
         {sub.status === "printed" && (
-          <div className="flex items-center gap-2 rounded-2xl bg-teal-50 px-4 py-3 text-sm font-bold text-teal-700">
+          <div className="flex items-center gap-2 rounded-2xl bg-orange-50 px-4 py-3 text-sm font-bold text-orange-700">
             <CheckCircle2 className="h-5 w-5" /> This KYC was printed and marked as Printed.
           </div>
         )}
