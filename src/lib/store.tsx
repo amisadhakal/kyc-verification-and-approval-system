@@ -536,7 +536,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         status: "pending",
         submittedAt: Date.now(),
       };
-      setState((s) => ({ submissions: [sub, ...s.submissions] }));
+      setState((s) => ({ ...s, submissions: [sub, ...s.submissions] }));
       return sub;
     };
 

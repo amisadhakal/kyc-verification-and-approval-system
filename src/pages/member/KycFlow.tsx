@@ -174,7 +174,7 @@ const inputCls =
   "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:cursor-not-allowed";
 
 const selectCls =
-  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 appearance-none";
+  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed";
 
 // ─── Helper: Document Upload Row ─────────────────────────────────────────────
 function DocRow({
@@ -275,6 +275,59 @@ function BottomBar({
           Submit application
         </button>
       )}
+    </div>
+  );
+}
+
+// ─── Helper: Shared layout wrapper for wizard steps ─────────────────────────
+function WizardShell({
+  children,
+  memberName,
+  currentStep,
+  onCancel,
+  showSubmitBtn,
+  onSubmitBtn,
+}: {
+  children: ReactNode;
+  memberName: string;
+  currentStep: WizardStep;
+  onCancel: () => void;
+  showSubmitBtn?: boolean;
+  onSubmitBtn?: () => void;
+}) {
+  return (
+    <div className="min-h-dvh bg-slate-100 pb-20">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-slate-200 px-4 py-3">
+        <div className="mx-auto flex max-w-2xl items-center gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-200 cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <div>
+            <h1 className="text-sm font-extrabold text-slate-900">
+              Sangam Cooperative — Member KYC Form
+            </h1>
+            <p className="text-[11px] font-medium text-slate-500">{memberName}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Step progress */}
+      <StepProgress current={currentStep} />
+
+      {/* Content */}
+      <div className="mx-auto max-w-2xl px-4 pt-5">{children}</div>
+
+      {/* Persistent bottom bar */}
+      <BottomBar
+        onCancel={() => navigate("/")}
+        onSubmit={showSubmitBtn ? onSubmitBtn : undefined}
+      />
     </div>
   );
 }
@@ -597,55 +650,6 @@ export default function KycFlow({ code }: { code: string }) {
     );
   }
 
-  // ── Shared layout wrapper for wizard steps ─────────────────────────────────
-  const WizardShell = ({
-    children,
-    onCancel = () => navigate("/"),
-    showSubmitBtn,
-    onSubmitBtn,
-  }: {
-    children: ReactNode;
-    onCancel?: () => void;
-    showSubmitBtn?: boolean;
-    onSubmitBtn?: () => void;
-  }) => (
-    <div className="min-h-dvh bg-slate-100 pb-20">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-slate-200 px-4 py-3">
-        <div className="mx-auto flex max-w-2xl items-center gap-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-200"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <div>
-            <h1 className="text-sm font-extrabold text-slate-900">
-              Sangam Cooperative — Member KYC Form
-            </h1>
-            <p className="text-[11px] text-slate-500">
-              {memberName} &middot; {member?.membershipCode}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Step progress */}
-      {["general", "address", "documents", "agreement"].includes(screen) && (
-        <StepProgress current={screen as WizardStep} />
-      )}
-
-      {/* Content */}
-      <div className="mx-auto max-w-2xl px-4 pt-5">{children}</div>
-
-      {/* Persistent bottom bar */}
-      <BottomBar
-        onCancel={() => navigate("/")}
-        onSubmit={showSubmitBtn ? onSubmitBtn : undefined}
-      />
-    </div>
-  );
 
   // ── Render: OTP Screen ─────────────────────────────────────────────────────
   if (screen === "otp" && member) {
@@ -772,39 +776,25 @@ export default function KycFlow({ code }: { code: string }) {
   // ── Render: Step 1 — General Details ──────────────────────────────────────
   if (screen === "general" && member) {
     return (
-      <WizardShell onCancel={() => setScreen("otp")}>
+      <WizardShell memberName={memberName} currentStep="general" onCancel={() => setScreen("otp")}>
         <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
           <h2 className="mb-5 text-center text-xl font-extrabold text-blue-700">
             General Details
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Referred By */}
-            <FormRow label="Referred By" note="Enter referral client code if any">
-              <input
-                type="text"
-                value={general.referredBy}
-                onChange={(e) => setGeneral({ ...general, referredBy: e.target.value })}
-                placeholder="Client Code"
-                className={inputCls}
-              />
-            </FormRow>
-
             {/* Client Type */}
             <FormRow label="Client Type" required>
-              <div className="relative">
-                <select
-                  value={general.clientType}
-                  onChange={(e) => setGeneral({ ...general, clientType: e.target.value })}
-                  className={selectCls}
-                >
-                  <option value="">Select Client Type</option>
-                  {CLIENT_TYPES.map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+              <select
+                value={general.clientType}
+                onChange={(e) => setGeneral({ ...general, clientType: e.target.value })}
+                className={selectCls}
+              >
+                <option value="">Select Client Type</option>
+                {CLIENT_TYPES.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
             </FormRow>
 
             {/* Mobile Number (pre-filled, readonly) */}
@@ -838,19 +828,16 @@ export default function KycFlow({ code }: { code: string }) {
 
             {/* Member Branch */}
             <FormRow label="Member Branch" required>
-              <div className="relative">
-                <select
-                  value={general.memberBranch}
-                  onChange={(e) => setGeneral({ ...general, memberBranch: e.target.value })}
-                  className={selectCls}
-                >
-                  <option value="">Select Member Branch</option>
-                  {MEMBER_BRANCHES.map((b) => (
-                    <option key={b}>{b}</option>
-                  ))}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+              <select
+                value={general.memberBranch}
+                onChange={(e) => setGeneral({ ...general, memberBranch: e.target.value })}
+                className={selectCls}
+              >
+                <option value="">Select Member Branch</option>
+                {MEMBER_BRANCHES.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
             </FormRow>
 
             {/* PAN Number */}
@@ -886,7 +873,7 @@ export default function KycFlow({ code }: { code: string }) {
             <button
               type="button"
               onClick={handleNextGeneral}
-              className="rounded bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95"
+              className="rounded bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 cursor-pointer"
             >
               Next
             </button>
@@ -916,7 +903,7 @@ export default function KycFlow({ code }: { code: string }) {
     };
 
     return (
-      <WizardShell onCancel={() => setScreen("general")}>
+      <WizardShell memberName={memberName} currentStep="address" onCancel={() => setScreen("general")}>
         <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
           <h2 className="mb-5 text-center text-xl font-extrabold text-blue-700">
             Address Details
@@ -927,66 +914,65 @@ export default function KycFlow({ code }: { code: string }) {
           <div className="grid grid-cols-2 gap-4">
             {/* Country */}
             <FormRow label="Country of Residence" required half>
-              <div className="relative">
-                <select
-                  value={addr.country}
-                  onChange={(e) => setAddr({ ...addr, country: e.target.value })}
-                  className={selectCls}
-                >
-                  {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+              <select
+                value={addr.country}
+                onChange={(e) => setAddr({ ...addr, country: e.target.value })}
+                className={selectCls}
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </FormRow>
 
             {/* State */}
             <FormRow label="State / Province" required half>
-              <div className="relative">
-                <select
-                  value={addr.state}
-                  onChange={(e) => setAddr({ ...addr, state: e.target.value, district: "", municipality: "" })}
-                  className={selectCls}
-                >
-                  <option value="">Select State</option>
-                  {NEPAL_PROVINCES.map((p) => <option key={p}>{p}</option>)}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+              <select
+                value={addr.state}
+                onChange={(e) => setAddr({ ...addr, state: e.target.value, district: "", municipality: "" })}
+                className={selectCls}
+              >
+                <option value="">Select State</option>
+                {NEPAL_PROVINCES.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
             </FormRow>
 
             {/* District */}
             <FormRow label="District" required half>
-              <div className="relative">
-                <select
-                  value={addr.district}
-                  onChange={(e) => setAddr({ ...addr, district: e.target.value, municipality: "" })}
-                  className={selectCls}
-                  disabled={!addr.state}
-                >
-                  <option value="">Select District</option>
-                  {districts.map((d) => <option key={d}>{d}</option>)}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+              <select
+                value={addr.district}
+                onChange={(e) => setAddr({ ...addr, district: e.target.value, municipality: "" })}
+                className={selectCls}
+                disabled={!addr.state}
+              >
+                <option value="">Select District</option>
+                {districts.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
             </FormRow>
 
             {/* Municipality */}
             <FormRow label="Municipality" required half>
-              <div className="relative">
-                <select
-                  value={addr.municipality}
-                  onChange={(e) => setAddr({ ...addr, municipality: e.target.value })}
-                  className={selectCls}
-                  disabled={!addr.district}
-                >
-                  <option value="">Select Municipality</option>
-                  {municipalities.map((m) => <option key={m}>{m}</option>)}
-                  {municipalities.length === 0 && addr.district && (
+              <select
+                value={addr.municipality}
+                onChange={(e) => setAddr({ ...addr, municipality: e.target.value })}
+                className={selectCls}
+                disabled={!addr.district}
+              >
+                <option value="">Select Municipality</option>
+                {municipalities.map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+                {addr.district && (
+                  <>
                     <option value={`${addr.district} Municipality`}>{addr.district} Municipality</option>
-                  )}
-                </select>
-                <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-              </div>
+                    <option value={`${addr.district} Rural Municipality`}>{addr.district} Rural Municipality</option>
+                  </>
+                )}
+              </select>
             </FormRow>
 
             {/* Ward No */}
@@ -1027,7 +1013,7 @@ export default function KycFlow({ code }: { code: string }) {
             <button
               type="button"
               onClick={() => setAddr({ ...addr, hasTempAddress: !addr.hasTempAddress })}
-              className="mt-3 flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline"
+              className="mt-3 flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline cursor-pointer"
             >
               {addr.hasTempAddress ? "− Hide" : "+ Add"} Temporary Address
             </button>
@@ -1037,45 +1023,62 @@ export default function KycFlow({ code }: { code: string }) {
                 <p className="col-span-2 text-sm font-bold text-blue-600">Temporary Address</p>
 
                 <FormRow label="Country" required half>
-                  <div className="relative">
-                    <select value={addr.tempCountry} onChange={(e) => setAddr({ ...addr, tempCountry: e.target.value })} className={selectCls}>
-                      {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-                    </select>
-                    <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-                  </div>
+                  <select
+                    value={addr.tempCountry}
+                    onChange={(e) => setAddr({ ...addr, tempCountry: e.target.value })}
+                    className={selectCls}
+                  >
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </FormRow>
 
                 <FormRow label="State / Province" required half>
-                  <div className="relative">
-                    <select value={addr.tempState} onChange={(e) => setAddr({ ...addr, tempState: e.target.value, tempDistrict: "", tempMunicipality: "" })} className={selectCls}>
-                      <option value="">Select State</option>
-                      {NEPAL_PROVINCES.map((p) => <option key={p}>{p}</option>)}
-                    </select>
-                    <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-                  </div>
+                  <select
+                    value={addr.tempState}
+                    onChange={(e) => setAddr({ ...addr, tempState: e.target.value, tempDistrict: "", tempMunicipality: "" })}
+                    className={selectCls}
+                  >
+                    <option value="">Select State</option>
+                    {NEPAL_PROVINCES.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
                 </FormRow>
 
                 <FormRow label="District" required half>
-                  <div className="relative">
-                    <select value={addr.tempDistrict} onChange={(e) => setAddr({ ...addr, tempDistrict: e.target.value, tempMunicipality: "" })} className={selectCls} disabled={!addr.tempState}>
-                      <option value="">Select District</option>
-                      {tempDistricts.map((d) => <option key={d}>{d}</option>)}
-                    </select>
-                    <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-                  </div>
+                  <select
+                    value={addr.tempDistrict}
+                    onChange={(e) => setAddr({ ...addr, tempDistrict: e.target.value, tempMunicipality: "" })}
+                    className={selectCls}
+                    disabled={!addr.tempState}
+                  >
+                    <option value="">Select District</option>
+                    {tempDistricts.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
                 </FormRow>
 
                 <FormRow label="Municipality" required half>
-                  <div className="relative">
-                    <select value={addr.tempMunicipality} onChange={(e) => setAddr({ ...addr, tempMunicipality: e.target.value })} className={selectCls} disabled={!addr.tempDistrict}>
-                      <option value="">Select Municipality</option>
-                      {tempMunicipalities.map((m) => <option key={m}>{m}</option>)}
-                      {tempMunicipalities.length === 0 && addr.tempDistrict && (
+                  <select
+                    value={addr.tempMunicipality}
+                    onChange={(e) => setAddr({ ...addr, tempMunicipality: e.target.value })}
+                    className={selectCls}
+                    disabled={!addr.tempDistrict}
+                  >
+                    <option value="">Select Municipality</option>
+                    {tempMunicipalities.map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                    {addr.tempDistrict && (
+                      <>
                         <option value={`${addr.tempDistrict} Municipality`}>{addr.tempDistrict} Municipality</option>
-                      )}
-                    </select>
-                    <ChevronRight className="pointer-events-none absolute right-2 top-2.5 h-4 w-4 rotate-90 text-slate-400" />
-                  </div>
+                        <option value={`${addr.tempDistrict} Rural Municipality`}>{addr.tempDistrict} Rural Municipality</option>
+                      </>
+                    )}
+                  </select>
                 </FormRow>
 
                 <FormRow label="Ward No" required half>
@@ -1114,7 +1117,7 @@ export default function KycFlow({ code }: { code: string }) {
       setDocs((prev) => ({ ...prev, [key]: d }));
 
     return (
-      <WizardShell onCancel={() => setScreen("address")}>
+      <WizardShell memberName={memberName} currentStep="documents" onCancel={() => setScreen("address")}>
         <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
           <h2 className="mb-1 text-center text-xl font-extrabold text-blue-700">
             Documents Upload
@@ -1209,6 +1212,8 @@ export default function KycFlow({ code }: { code: string }) {
   if (screen === "agreement") {
     return (
       <WizardShell
+        memberName={memberName}
+        currentStep="agreement"
         onCancel={() => setScreen("documents")}
         showSubmitBtn
         onSubmitBtn={handleSubmit}
