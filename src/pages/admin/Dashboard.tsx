@@ -1,13 +1,24 @@
 import { useMemo, useState } from "react";
-import { AlertTriangle, CheckCircle2, Clock, Printer, Users as UsersIcon, XCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Eye,
+  FileText,
+  Printer,
+  Sparkles,
+  Users as UsersIcon,
+  XCircle,
+} from "lucide-react";
 import { useStore } from "../../lib/store";
 import { navigate } from "../../lib/router";
 import { formatDateTime, timeAgo } from "../../lib/utils";
 import { Avatar, StatusPill } from "../../components/ui";
+import { RejectModal } from "./SubmissionDetail";
 import type { KycSubmission, KycStatus } from "../../lib/types";
 
 const FILTERS: { key: string; label: string }[] = [
-  { key: "all", label: "All" },
+  { key: "all", label: "All Submissions" },
   { key: "pending", label: "Pending Review" },
   { key: "approved", label: "Approved" },
   { key: "rejected", label: "Rejected" },
@@ -42,64 +53,109 @@ export default function Dashboard() {
   }, [state.submissions, filter]);
 
   const cards = [
-    { label: "Pending Review", value: stats.pending, icon: Clock, cls: "bg-amber-50 text-amber-600" },
-    { label: "Awaiting Action", value: stats.submitted, icon: AlertTriangle, cls: "bg-indigo-50 text-indigo-600" },
-    { label: "Approved", value: stats.approved, icon: CheckCircle2, cls: "bg-orange-50 text-orange-600" },
-    { label: "Rejected", value: stats.rejected, icon: XCircle, cls: "bg-red-50 text-red-500" },
-    { label: "Printed", value: stats.printed, icon: Printer, cls: "bg-orange-50 text-orange-600" },
-    { label: "Members Added", value: stats.members, icon: UsersIcon, cls: "bg-slate-100 text-slate-600" },
+    {
+      label: "Pending Review",
+      value: stats.pending,
+      icon: Clock,
+      cls: "bg-amber-50 text-amber-600 border border-amber-200/80",
+    },
+    {
+      label: "Approved",
+      value: stats.approved,
+      icon: CheckCircle2,
+      cls: "bg-emerald-50 text-emerald-600 border border-emerald-200/80",
+    },
+    {
+      label: "Rejected",
+      value: stats.rejected,
+      icon: XCircle,
+      cls: "bg-rose-50 text-rose-600 border border-rose-200/80",
+    },
+    {
+      label: "Printed",
+      value: stats.printed,
+      icon: Printer,
+      cls: "bg-blue-50 text-blue-700 border border-blue-200/80",
+    },
+    {
+      label: "Total Members",
+      value: stats.members,
+      icon: UsersIcon,
+      cls: "bg-slate-50 text-slate-700 border border-slate-200/80",
+    },
   ];
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-extrabold text-slate-900">Manager Dashboard</h2>
-        <p className="mt-0.5 text-sm text-slate-500">Review member KYC submissions and track approvals.</p>
+      {/* Page Title */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+            Manager Review Dashboard
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500">
+            Review submitted member KYC documents, approve or reject, and print official KYC forms.
+          </p>
+        </div>
       </div>
 
+      {/* Pending Review Alert Banner */}
       {stats.pending > 0 && (
-        <button
-          onClick={() => navigate("/admin")}
-          className="flex w-full items-center gap-3 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-left"
-        >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
-            <Clock className="h-5 w-5 text-amber-600" />
-          </span>
-          <span className="flex-1">
-            <span className="block text-sm font-bold text-amber-900">
-              {stats.pending} submission{stats.pending > 1 ? "s" : ""} waiting for review
-            </span>
-            <span className="block text-xs text-amber-700">New KYC submissions need your decision.</span>
-          </span>
-          <span className="text-amber-600">→</span>
-        </button>
+        <div className="rounded-2xl bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 p-4 text-white shadow-lg border border-blue-800/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 ring-1 ring-amber-400/30">
+                <Clock className="h-6 w-6 animate-pulse" />
+              </div>
+              <div>
+                <p className="text-sm font-extrabold text-white">
+                  {stats.pending} Submission{stats.pending > 1 ? "s" : ""} Waiting for Review
+                </p>
+                <p className="text-xs text-blue-200">
+                  New member KYC submissions have been received and need your decision.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setFilter("pending")}
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 px-4 py-2 text-xs font-bold text-white transition self-start sm:self-auto shadow-sm"
+            >
+              Filter Pending Queue →
+            </button>
+          </div>
+        </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
         {cards.map((c) => {
           const Icon = c.icon;
           return (
-            <div key={c.label} className="rounded-2xl bg-white p-4 shadow-sm border border-slate-100">
-              <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${c.cls}`}>
-                <Icon className="h-5 w-5" />
-              </span>
-              <p className="mt-2 text-2xl font-extrabold text-slate-900">{c.value}</p>
-              <p className="text-xs font-semibold text-slate-500">{c.label}</p>
+            <div
+              key={c.label}
+              className={`rounded-2xl p-3.5 shadow-sm bg-white border transition hover:shadow-md ${c.cls}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-600 truncate">{c.label}</span>
+                <Icon className="h-4 w-4 shrink-0" />
+              </div>
+              <p className="mt-2 text-2xl font-black text-slate-900">{c.value}</p>
             </div>
           );
         })}
       </div>
 
-      <div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
+      {/* Filter Tabs & Submissions List */}
+      <div className="space-y-3">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
           {FILTERS.map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition ${
+              className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 ${
                 filter === f.key
-                  ? "bg-amber-700 text-white shadow"
-                  : "bg-white text-slate-600 border border-slate-200"
+                  ? "bg-blue-900 text-white shadow-sm ring-1 ring-blue-700"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
               }`}
             >
               {f.label}
@@ -107,14 +163,18 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="mt-4 space-y-3">
+        {/* List of Submissions */}
+        <div className="space-y-3">
           {filtered.length === 0 && (
             <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
               <FileText className="mx-auto h-10 w-10 text-slate-300" />
-              <p className="mt-3 text-sm font-semibold text-slate-500">No submissions found</p>
-              <p className="mt-1 text-xs text-slate-400">KYC submissions will appear here once members submit.</p>
+              <p className="mt-3 text-sm font-bold text-slate-600">No submissions found</p>
+              <p className="mt-1 text-xs text-slate-400">
+                KYC submissions will appear here once members submit the online form.
+              </p>
             </div>
           )}
+
           {filtered.map((s) => (
             <SubmissionCard key={s.id} sub={s} />
           ))}
@@ -125,66 +185,121 @@ export default function Dashboard() {
 }
 
 function SubmissionCard({ sub }: { sub: KycSubmission }) {
-  const { startReview, approveSubmission } = useStore();
+  const { approveSubmission, rejectSubmission } = useStore();
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const handleApprove = () => {
+    approveSubmission(sub.id);
+    showToast(`✓ Approved KYC for ${sub.memberName}`);
+  };
+
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm border border-slate-100">
+    <div className="rounded-3xl bg-white p-4 sm:p-5 shadow-sm border border-slate-200/80 transition hover:shadow-md space-y-3">
+      {/* Toast */}
+      {toast && (
+        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-2.5 text-center text-xs font-bold text-emerald-800 animate-fade-in">
+          {toast}
+        </div>
+      )}
+
+      {/* Member Header Info */}
       <div className="flex items-start gap-3">
         <Avatar name={sub.memberName} />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="truncate font-bold text-slate-900">{sub.memberName}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="truncate text-base font-extrabold text-slate-900">
+              {sub.memberName}
+            </h3>
             <StatusPill status={sub.status} />
           </div>
-          <p className="mt-0.5 text-xs text-slate-500">
-            {sub.membershipCode} · {sub.phone} · {timeAgo(sub.submittedAt)}
+          <p className="mt-0.5 text-xs text-slate-500 font-medium">
+            Code: <span className="font-bold text-slate-700">{sub.membershipCode}</span> · Phone:{" "}
+            <span className="font-bold text-slate-700">+91 {sub.phone}</span> · {timeAgo(sub.submittedAt)}
           </p>
+          {sub.address && (
+            <p className="mt-1 text-xs text-slate-600 truncate">
+              📍 {sub.address}
+            </p>
+          )}
           {sub.remark && (
-            <p className="mt-1 text-xs text-slate-500">
-              <span className="font-semibold">Remark:</span> {sub.remark}
+            <p className="mt-1 text-xs text-rose-700 bg-rose-50/80 rounded-lg p-1.5 border border-rose-200 inline-block font-semibold">
+              Remark: {sub.remark}
             </p>
           )}
         </div>
       </div>
-      <div className="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3">
-        <button
-          onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-          className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
-        >
-          View Details
-        </button>
-        {sub.status === "submitted" && (
-          <button
-            onClick={() => startReview(sub.id)}
-            className="flex-1 rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-800"
-          >
-            Start Review
-          </button>
-        )}
-        {(sub.status === "pending" || sub.status === "submitted") && (
-          <>
-            <button
-              onClick={() => approveSubmission(sub.id)}
-              className="flex-1 rounded-xl bg-amber-600 px-3 py-2 text-sm font-bold text-white"
-            >
-              Approve
-            </button>
-            <button
-              onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-              className="flex-1 rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-600"
-            >
-              Reject
-            </button>
-          </>
-        )}
-        {sub.status === "approved" && (
+
+      {/* User-Friendly Action Buttons (Focused on Mobile & High Usability) */}
+      <div className="pt-2 border-t border-slate-100">
+        <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2">
+          {/* 1. View Details Button */}
           <button
             onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-            className="flex-1 rounded-xl bg-orange-600 px-3 py-2 text-sm font-bold text-white"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100 text-blue-900 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Print
+            <Eye className="h-4 w-4 text-blue-700" />
+            <span>View Details</span>
           </button>
-        )}
+
+          {/* 2 & 3. Approve and Reject Buttons (if pending or submitted) */}
+          {(sub.status === "pending" || sub.status === "submitted") && (
+            <>
+              <button
+                onClick={handleApprove}
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                <span>Approve</span>
+              </button>
+
+              <button
+                onClick={() => setRejectOpen(true)}
+                className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-rose-500"
+              >
+                <XCircle className="h-4 w-4 text-rose-600" />
+                <span>Reject</span>
+              </button>
+            </>
+          )}
+
+          {/* 4. Print Button (if approved) */}
+          {sub.status === "approved" && (
+            <button
+              onClick={() => navigate(`/print/${sub.id}`)}
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 hover:bg-blue-950 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm shadow-slate-900/25 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-slate-700"
+            >
+              <Printer className="h-4 w-4" />
+              <span>Print KYC Form</span>
+            </button>
+          )}
+
+          {/* 5. Reprint Button (if already printed) */}
+          {sub.status === "printed" && (
+            <button
+              onClick={() => navigate(`/print/${sub.id}`)}
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition"
+            >
+              <Printer className="h-4 w-4 text-slate-500" />
+              <span>Reprint</span>
+            </button>
+          )}
+        </div>
       </div>
+
+      <RejectModal
+        open={rejectOpen}
+        onClose={() => setRejectOpen(false)}
+        onConfirm={(remark) => {
+          rejectSubmission(sub.id, remark);
+          showToast(`Marked as Rejected: ${remark}`);
+        }}
+      />
     </div>
   );
 }

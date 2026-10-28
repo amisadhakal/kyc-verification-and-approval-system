@@ -35,15 +35,65 @@ export interface Member {
 export interface KycSubmission {
   id: string;
   memberId: string;
+
+  // ── Step 1: General Details ──────────────────────────────────────────────
   memberName: string;
   phone: string;
   membershipCode: string;
-  address: string;
+  referredBy?: string;
+  clientType?: string;
+  submissionType?: "online" | "offline";
+  memberBranch?: string;
+  panNumber?: string;
+  email?: string;
+
+  // ── Step 2: Address Details ───────────────────────────────────────────────
+  // Permanent Address
+  country?: string;
+  state?: string;
+  district?: string;
+  municipality?: string;
+  wardNo?: string;
+  streetTole?: string;
+  // Temporary Address
+  hasTempAddress?: boolean;
+  sameAsPermanent?: boolean;
+  tempCountry?: string;
+  tempState?: string;
+  tempDistrict?: string;
+  tempMunicipality?: string;
+  tempWardNo?: string;
+  tempStreetTole?: string;
+  // Legacy / computed address string for display cards
+  address?: string;
+
+  // ── Step 3: Documents Upload ──────────────────────────────────────────────
+  citizenshipFrontDataUrl?: string;
+  citizenshipFrontName?: string;
+  citizenshipBackDataUrl?: string;
+  citizenshipBackName?: string;
+  selfieDataUrl?: string;
+  selfieName?: string;
+  birthCertDataUrl?: string;
+  birthCertName?: string;
+  panDocDataUrl?: string;
+  panDocName?: string;
+  kycFormDataUrl?: string;
+  kycFormName?: string;
   photoDataUrl?: string;
   photoName?: string;
+  agreementDataUrl?: string;
+  agreementName?: string;
+  nationalIdDataUrl?: string;
+  nationalIdName?: string;
+  companyRegDataUrl?: string;
+  companyRegName?: string;
+  // Legacy doc fields (for backward compat with seed data)
   idDocType?: string;
   idDocDataUrl?: string;
   idDocName?: string;
+
+  // ── Metadata ──────────────────────────────────────────────────────────────
   status: SubmissionStatus;
   submittedAt: number;
   reviewedAt?: number;
