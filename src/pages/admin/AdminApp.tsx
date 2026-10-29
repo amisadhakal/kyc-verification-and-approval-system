@@ -63,19 +63,17 @@ export default function AdminApp({
                 <h1 className="text-sm font-black text-white leading-tight sm:text-base truncate">
                   {org.nameNepali}
                 </h1>
-                {org.isSample && (
-                  <span className="hidden sm:inline-block rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 text-[10px] font-bold">
-                    Sample / Placeholder
-                  </span>
-                )}
               </div>
               <p className="text-[11px] font-medium text-[#DDF3E7] truncate">
-                {org.nameEnglish} &middot; {org.addressNepali || org.addressEnglish}
+                {org.nameEnglish}
+              </p>
+              <p className="mt-0.5 text-[11px] font-medium text-[#DDF3E7]/85 truncate">
+                {org.addressNepali || org.addressEnglish}
               </p>
             </div>
           </div>
 
-          {/* Right: role badge & logout */}
+          {/* Right: logout */}
           <div className="shrink-0 flex items-center gap-2">
             <button
               onClick={handleLogout}
@@ -85,17 +83,13 @@ export default function AdminApp({
               <LogOut className="h-3.5 w-3.5" />
               <span>Logout</span>
             </button>
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1 text-xs font-bold text-[#DDF3E7]">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              व्यवस्थापक (Manager)
-            </span>
           </div>
         </div>
 
         {/* ── Tab Navigation ──────────────────────────────────────────── */}
         {!isDetail && (
           <nav className="mx-auto max-w-5xl px-4 pb-2.5">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-2 pt-1">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const active = section === t.key;
