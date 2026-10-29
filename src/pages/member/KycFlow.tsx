@@ -40,6 +40,7 @@ import { formatDateTime } from "../../lib/utils";
 import { STATUS_LABEL } from "../../lib/types";
 import { StatusPill } from "../../components/ui";
 import { fileToDataUrl } from "../../lib/image";
+import { CoopLogo } from "../../components/CoopLogo";
 import {
   CLIENT_TYPES,
   COUNTRIES,
@@ -113,9 +114,9 @@ function StepProgress({ current }: { current: WizardStep }) {
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-extrabold transition-all ${
                     done
-                      ? "border-blue-600 bg-blue-600 text-white"
+                      ? "border-teal-600 bg-teal-600 text-white"
                       : active
-                      ? "border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                      ? "border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-600/30"
                       : "border-slate-300 bg-white text-slate-400"
                   }`}
                 >
@@ -123,7 +124,7 @@ function StepProgress({ current }: { current: WizardStep }) {
                 </div>
                 <span
                   className={`hidden text-center text-[10px] font-semibold sm:block ${
-                    active ? "text-blue-700 font-extrabold" : done ? "text-blue-600" : "text-slate-400"
+                    active ? "text-teal-800 font-extrabold" : done ? "text-teal-600" : "text-slate-400"
                   }`}
                 >
                   {step.label}
@@ -132,7 +133,7 @@ function StepProgress({ current }: { current: WizardStep }) {
               {i < WIZARD_STEPS.length - 1 && (
                 <div
                   className={`mx-1 h-0.5 w-8 sm:w-12 ${
-                    i < currentIdx ? "bg-blue-600" : "bg-slate-200"
+                    i < currentIdx ? "bg-teal-600" : "bg-slate-200"
                   }`}
                 />
               )}
@@ -160,7 +161,7 @@ function FormRow({
 }) {
   return (
     <div className={half ? "" : "col-span-2 sm:col-span-2"}>
-      <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-blue-700">
+      <label className="mb-1 block text-xs font-bold uppercase tracking-wide text-teal-800">
         {label}
         {required && <span className="ml-0.5 text-red-500"> *</span>}
       </label>
@@ -171,10 +172,10 @@ function FormRow({
 }
 
 const inputCls =
-  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:cursor-not-allowed";
+  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-50 disabled:cursor-not-allowed";
 
 const selectCls =
-  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed";
+  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100 cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed";
 
 // ─── Helper: Document Upload Row ─────────────────────────────────────────────
 function DocRow({
@@ -200,7 +201,7 @@ function DocRow({
           {required && <span className="text-red-500"> *</span>}
         </p>
         {hint && (
-          <p className="text-[11px] text-blue-600">{hint}</p>
+          <p className="text-[11px] text-teal-700 font-medium">{hint}</p>
         )}
         {value.dataUrl && (
           <p className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-emerald-700">
@@ -213,7 +214,7 @@ function DocRow({
           <button
             type="button"
             onClick={() => onChange(emptyDoc())}
-            className="flex items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+            className="flex items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 cursor-pointer"
           >
             <X className="h-3.5 w-3.5" /> Remove
           </button>
@@ -221,9 +222,9 @@ function DocRow({
           <button
             type="button"
             onClick={() => ref.current?.click()}
-            className="flex items-center gap-1.5 rounded border border-blue-500 bg-white px-3 py-1.5 text-xs font-bold text-blue-700 shadow-sm transition hover:bg-blue-50 active:scale-95"
+            className="flex items-center gap-1.5 rounded border border-teal-600 bg-white px-3 py-1.5 text-xs font-bold text-teal-800 shadow-sm transition hover:bg-teal-50 active:scale-95 cursor-pointer"
           >
-            <Upload className="h-3.5 w-3.5" /> UPLOAD
+            <Upload className="h-3.5 w-3.5 text-teal-700" /> UPLOAD
           </button>
         )}
         <input
@@ -295,6 +296,9 @@ function WizardShell({
   showSubmitBtn?: boolean;
   onSubmitBtn?: () => void;
 }) {
+  const { state } = useStore();
+  const org = state.orgSettings;
+
   return (
     <div className="min-h-dvh bg-slate-100 pb-20">
       {/* Header */}
@@ -303,16 +307,19 @@ function WizardShell({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-200 cursor-pointer"
+            className="rounded-full bg-slate-100 p-2 text-slate-600 transition hover:bg-slate-200 cursor-pointer shrink-0"
             aria-label="Back"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
-          <div>
-            <h1 className="text-sm font-extrabold text-slate-900">
-              Sangam Cooperative — Member KYC Form
+          <CoopLogo settings={org} className="h-9 w-9 shrink-0 shadow-sm" iconClassName="h-5 w-5" />
+          <div className="min-w-0">
+            <h1 className="text-sm font-extrabold text-slate-900 truncate">
+              {org.nameNepali}
             </h1>
-            <p className="text-[11px] font-medium text-slate-500">{memberName}</p>
+            <p className="text-[11px] font-medium text-teal-800 truncate">
+              {org.nameEnglish} &middot; <span className="text-slate-600">{memberName}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -337,6 +344,7 @@ function WizardShell({
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function KycFlow({ code }: { code: string }) {
   const { state, findByInviteCode, submitKyc, resendInvite } = useStore();
+  const org = state.orgSettings;
   const member = useMemo(() => findByInviteCode(code), [state.members, code]);
 
   const [screen, setScreen] = useState<Screen>("loading");
@@ -585,7 +593,7 @@ export default function KycFlow({ code }: { code: string }) {
         </div>
         <button
           onClick={() => navigate("/")}
-          className="rounded-xl bg-blue-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-800"
+          className="rounded-xl bg-teal-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-teal-800"
         >
           ← Enter Code Manually
         </button>
@@ -635,13 +643,13 @@ export default function KycFlow({ code }: { code: string }) {
         <div className="flex w-full max-w-xs flex-col gap-2">
           <button
             onClick={() => navigate("/admin")}
-            className="w-full rounded-xl bg-blue-700 py-3 text-sm font-bold text-white transition hover:bg-blue-800"
+            className="w-full rounded-xl bg-teal-700 py-3 text-sm font-bold text-white transition hover:bg-teal-800 cursor-pointer"
           >
             Go to Manager Portal
           </button>
           <button
             onClick={() => setScreen("status")}
-            className="w-full rounded-xl border border-slate-200 py-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+            className="w-full rounded-xl border border-slate-200 py-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 cursor-pointer"
           >
             Track Application Status
           </button>
@@ -650,31 +658,32 @@ export default function KycFlow({ code }: { code: string }) {
     );
   }
 
-
   // ── Render: OTP Screen ─────────────────────────────────────────────────────
   if (screen === "otp" && member) {
+    const orgTag = org.shortName || org.nameEnglish || "Coop KYC";
+
     return (
-      <div className="min-h-dvh bg-gradient-to-b from-blue-800 via-blue-700 to-blue-50">
+      <div className="min-h-dvh bg-gradient-to-b from-teal-900 via-teal-800 to-slate-50">
         {/* Top brand strip */}
         <div className="px-4 pt-10 pb-16 text-center text-white">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur mb-4">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur mb-4 shadow-lg">
             <ShieldCheck className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-2xl font-black">Verify OTP</h1>
-          <p className="mt-1 text-sm text-blue-100">
+          <p className="mt-1 text-sm text-teal-100">
             Hi <span className="font-bold text-white">{member.name}</span>, enter the 6-digit code sent via SMS.
           </p>
         </div>
 
         {/* White card */}
-        <div className="mx-auto -mt-8 max-w-sm rounded-3xl bg-white px-6 py-7 shadow-2xl mx-4 sm:mx-auto">
+        <div className="mx-auto -mt-8 max-w-sm rounded-3xl bg-white px-6 py-7 shadow-2xl mx-4 sm:mx-auto border border-teal-100">
           {/* Simulated SMS snippet */}
           <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-blue-700 mb-1.5">
-              <MessageSquare className="h-3.5 w-3.5" /> SMS received on +91 {member.phone}
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-teal-800 mb-1.5">
+              <MessageSquare className="h-3.5 w-3.5" /> SMS received on +977 {member.phone}
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Sangam Coop: Open{" "}
+              {orgTag}: Open{" "}
               <span className="font-mono font-bold text-slate-900">
                 kyc.coop/{member.inviteCode.toLowerCase()}
               </span>{" "}
@@ -682,7 +691,7 @@ export default function KycFlow({ code }: { code: string }) {
               <button
                 type="button"
                 onClick={() => setOtp(member.otp.split(""))}
-                className="font-mono font-extrabold text-amber-600 underline underline-offset-2"
+                className="font-mono font-extrabold text-amber-600 underline underline-offset-2 cursor-pointer"
               >
                 {member.otp}
               </button>
@@ -730,8 +739,8 @@ export default function KycFlow({ code }: { code: string }) {
                   setOtp(next);
                   document.getElementById(`otp-${Math.min(txt.length, 5)}`)?.focus();
                 }}
-                className={`h-12 w-10 rounded-lg border-2 text-center text-lg font-extrabold outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100 ${
-                  d ? "border-blue-600 bg-blue-50 text-blue-900" : "border-slate-300 bg-slate-50"
+                className={`h-12 w-10 rounded-lg border-2 text-center text-lg font-extrabold outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-100 ${
+                  d ? "border-teal-600 bg-teal-50 text-teal-900" : "border-slate-300 bg-slate-50"
                 }`}
               />
             ))}
@@ -743,7 +752,7 @@ export default function KycFlow({ code }: { code: string }) {
 
           <button
             onClick={handleVerifyOtp}
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-sm font-extrabold text-white shadow-md shadow-blue-600/25 transition hover:bg-blue-700 active:scale-[0.98]"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 py-3.5 text-sm font-extrabold text-white shadow-md shadow-teal-700/25 transition hover:bg-teal-700 active:scale-[0.98] cursor-pointer"
           >
             <KeyRound className="h-4 w-4" /> Verify &amp; Continue
           </button>
@@ -758,7 +767,7 @@ export default function KycFlow({ code }: { code: string }) {
                   setOtp(["", "", "", "", "", ""]);
                   setSecondsLeft(30);
                 }}
-                className="text-xs font-bold text-blue-600 hover:underline"
+                className="text-xs font-bold text-teal-700 hover:underline cursor-pointer"
               >
                 Didn't receive code? Resend OTP
               </button>
@@ -766,8 +775,8 @@ export default function KycFlow({ code }: { code: string }) {
           </div>
         </div>
 
-        <p className="mt-6 text-center text-xs text-blue-200">
-          Sangam Cooperative Society Ltd &middot; Secure Verification
+        <p className="mt-6 text-center text-xs text-teal-200">
+          {org.nameNepali} &middot; {org.nameEnglish}
         </p>
       </div>
     );
@@ -778,7 +787,7 @@ export default function KycFlow({ code }: { code: string }) {
     return (
       <WizardShell memberName={memberName} currentStep="general" onCancel={() => setScreen("otp")}>
         <div className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
-          <h2 className="mb-5 text-center text-xl font-extrabold text-blue-700">
+          <h2 className="mb-5 text-center text-xl font-extrabold text-teal-800">
             General Details
           </h2>
 
@@ -818,7 +827,7 @@ export default function KycFlow({ code }: { code: string }) {
                       value={v}
                       checked={general.submissionType === v}
                       onChange={() => setGeneral({ ...general, submissionType: v })}
-                      className="accent-blue-600 h-4 w-4"
+                      className="accent-teal-600 h-4 w-4"
                     />
                     {v.toUpperCase()}
                   </label>
@@ -873,7 +882,7 @@ export default function KycFlow({ code }: { code: string }) {
             <button
               type="button"
               onClick={handleNextGeneral}
-              className="rounded bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 active:scale-95 cursor-pointer"
+              className="rounded bg-teal-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-700 active:scale-95 cursor-pointer"
             >
               Next
             </button>
@@ -1326,7 +1335,7 @@ function MemberStatusScreen({ member }: { member: Member }) {
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-5 bg-slate-50 p-6 text-center">
-      <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-blue-100">
+      <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-teal-50">
         {member.status === "rejected" ? (
           <X className="h-10 w-10 text-red-600" />
         ) : member.status === "approved" || member.status === "printed" ? (
@@ -1358,14 +1367,14 @@ function MemberStatusScreen({ member }: { member: Member }) {
           </div>
           <div className="flex justify-between">
             <dt className="text-slate-400">Mobile</dt>
-            <dd className="font-bold text-slate-800">+91 {member.phone}</dd>
+            <dd className="font-bold text-slate-800">+977 {member.phone}</dd>
           </div>
         </dl>
       </div>
 
       <button
         onClick={() => navigate("/admin")}
-        className="rounded-xl bg-blue-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-800"
+        className="rounded-xl bg-teal-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-teal-800"
       >
         Go to Manager Portal
       </button>

@@ -6,14 +6,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { KycSubmission, Member, MemberInput } from "./types";
+import type { KycSubmission, Member, MemberInput, OrgSettings } from "./types";
+import { DEFAULT_ORG_SETTINGS } from "./types";
 
-const STORAGE_KEY = "coop-kyc-state-v4";
+const STORAGE_KEY = "coop-kyc-state-v5";
 const DAY = 24 * 60 * 60 * 1000;
 
 export interface AppState {
   members: Member[];
   submissions: KycSubmission[];
+  orgSettings: OrgSettings;
 }
 
 export interface SubmitKycInput {
@@ -103,6 +105,7 @@ interface StoreValue {
   rejectSubmission: (submissionId: string, remark: string) => void;
   markPrinted: (submissionId: string) => void;
   offlineAdd: (input: OfflineEntryInput) => KycSubmission;
+  updateOrgSettings: (patch: Partial<OrgSettings>) => void;
   resetState: () => void;
 }
 
@@ -274,7 +277,7 @@ export function seedState(): AppState {
     },
   ];
 
-  return { members, submissions };
+  return { members, submissions, orgSettings: DEFAULT_ORG_SETTINGS };
 }
 
 function loadState(): AppState {
@@ -283,7 +286,12 @@ function loadState(): AppState {
     if (raw) {
       const parsed = JSON.parse(raw) as AppState;
       if (Array.isArray(parsed.members) && Array.isArray(parsed.submissions)) {
-        return parsed;
+        return {
+          ...parsed,
+          orgSettings: parsed.orgSettings
+            ? { ...DEFAULT_ORG_SETTINGS, ...parsed.orgSettings }
+            : DEFAULT_ORG_SETTINGS,
+        };
       }
     }
   } catch {
@@ -455,6 +463,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       };
 
       setState((s) => ({
+        ...s,
         members: s.members.map((m) =>
           m.id === member.id ? { ...m, status: "pending" } : m
         ),
@@ -470,6 +479,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const sub = state.submissions.find((s) => s.id === submissionId);
       if (!sub) return;
       setState((s) => ({
+        ...s,
         submissions: s.submissions.map((x) =>
           x.id === submissionId ? { ...x, status: "pending" } : x
         ),
@@ -483,6 +493,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const sub = state.submissions.find((s) => s.id === submissionId);
       if (!sub) return;
       setState((s) => ({
+        ...s,
         submissions: s.submissions.map((x) =>
           x.id === submissionId
             ? { ...x, status: "approved", reviewedAt: Date.now(), reviewedBy: "Manager · Suresh" }
@@ -498,6 +509,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const sub = state.submissions.find((s) => s.id === submissionId);
       if (!sub) return;
       setState((s) => ({
+        ...s,
         submissions: s.submissions.map((x) =>
           x.id === submissionId
             ? { ...x, status: "rejected", reviewedAt: Date.now(), reviewedBy: "Manager · Suresh", remark }
@@ -513,6 +525,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const sub = state.submissions.find((s) => s.id === submissionId);
       if (!sub || sub.status !== "approved") return;
       setState((s) => ({
+        ...s,
         submissions: s.submissions.map((x) =>
           x.id === submissionId ? { ...x, status: "printed", printedAt: Date.now() } : x
         ),
@@ -540,6 +553,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return sub;
     };
 
+    const updateOrgSettings = (patch: Partial<OrgSettings>) => {
+      setState((s) => ({
+        ...s,
+        orgSettings: {
+          ...s.orgSettings,
+          ...patch,
+        },
+      }));
+    };
+
     const resetState = () => {
       const fresh = seedState();
       setState(fresh);
@@ -564,6 +587,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       rejectSubmission,
       markPrinted,
       offlineAdd,
+      updateOrgSettings,
       resetState,
     };
   }, [state]);

@@ -47,7 +47,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
         <p className="mt-3 font-bold text-slate-700">Submission not found</p>
         <button
           onClick={() => navigate("/admin")}
-          className="mt-4 rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-800 transition"
+          className="mt-4 rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-teal-800 transition cursor-pointer"
         >
           Back to Dashboard
         </button>
@@ -71,11 +71,11 @@ export default function SubmissionDetail({ id }: { id: string }) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate("/admin")}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-blue-900 transition"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-teal-900 transition cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Submissions
         </button>
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-900 border border-blue-200">
+        <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold text-teal-900 border border-teal-200">
           KYC-{sub.membershipCode}
         </span>
       </div>
@@ -96,7 +96,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
             </h2>
             <p className="text-xs text-slate-500 font-medium">
               Member Code: <span className="font-bold text-slate-700">{sub.membershipCode}</span> ·
-              Phone: <span className="font-bold text-slate-700">+91 {sub.phone}</span>
+              Phone: <span className="font-bold text-slate-700 font-mono">+977 {sub.phone}</span>
             </p>
           </div>
           <StatusPill status={sub.status} />
@@ -272,7 +272,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
             </div>
             <button
               onClick={handlePrint}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 hover:bg-blue-950 active:scale-[0.98] py-3.5 text-sm font-extrabold text-white shadow-lg shadow-slate-900/25 transition focus:outline-none focus:ring-4 focus:ring-slate-400"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-850 hover:bg-teal-900 bg-teal-900 active:scale-[0.98] py-3.5 text-sm font-extrabold text-white shadow-lg shadow-teal-950/20 transition focus:outline-none focus:ring-4 focus:ring-teal-400 cursor-pointer"
             >
               <Printer className="h-5 w-5" />
               <span>Print Official KYC Document</span>
@@ -282,8 +282,8 @@ export default function SubmissionDetail({ id }: { id: string }) {
 
         {sub.status === "printed" && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 rounded-2xl bg-blue-50 p-3 text-xs font-bold text-blue-900 border border-blue-200">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-blue-700" />
+            <div className="flex items-center gap-2 rounded-2xl bg-teal-50 p-3 text-xs font-bold text-teal-900 border border-teal-200">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-teal-700" />
               This KYC has been printed and archived in society records.
             </div>
             <button

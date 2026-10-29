@@ -75,7 +75,7 @@ export default function Dashboard() {
       label: "Printed",
       value: stats.printed,
       icon: Printer,
-      cls: "bg-blue-50 text-blue-700 border border-blue-200/80",
+      cls: "bg-teal-50 text-teal-700 border border-teal-200/80",
     },
     {
       label: "Total Members",
@@ -101,7 +101,7 @@ export default function Dashboard() {
 
       {/* Pending Review Alert Banner */}
       {stats.pending > 0 && (
-        <div className="rounded-2xl bg-gradient-to-r from-blue-950 via-slate-900 to-blue-900 p-4 text-white shadow-lg border border-blue-800/80">
+        <div className="rounded-2xl bg-gradient-to-r from-teal-950 via-slate-900 to-teal-900 p-4 text-white shadow-lg border border-teal-800/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 ring-1 ring-amber-400/30">
@@ -111,14 +111,14 @@ export default function Dashboard() {
                 <p className="text-sm font-extrabold text-white">
                   {stats.pending} Submission{stats.pending > 1 ? "s" : ""} Waiting for Review
                 </p>
-                <p className="text-xs text-blue-200">
+                <p className="text-xs text-teal-200">
                   New member KYC submissions have been received and need your decision.
                 </p>
               </div>
             </div>
             <button
               onClick={() => setFilter("pending")}
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 px-4 py-2 text-xs font-bold text-white transition self-start sm:self-auto shadow-sm"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95 px-4 py-2 text-xs font-bold text-white transition self-start sm:self-auto shadow-sm cursor-pointer"
             >
               Filter Pending Queue →
             </button>
@@ -152,9 +152,9 @@ export default function Dashboard() {
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 ${
+              className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 cursor-pointer ${
                 filter === f.key
-                  ? "bg-blue-900 text-white shadow-sm ring-1 ring-blue-700"
+                  ? "bg-teal-700 text-white shadow-sm ring-1 ring-teal-600"
                   : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
               }`}
             >
@@ -220,7 +220,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
           </div>
           <p className="mt-0.5 text-xs text-slate-500 font-medium">
             Code: <span className="font-bold text-slate-700">{sub.membershipCode}</span> · Phone:{" "}
-            <span className="font-bold text-slate-700">+91 {sub.phone}</span> · {timeAgo(sub.submittedAt)}
+            <span className="font-bold text-slate-700 font-mono">+977 {sub.phone}</span> · {timeAgo(sub.submittedAt)}
           </p>
           {sub.address && (
             <p className="mt-1 text-xs text-slate-600 truncate">
@@ -241,9 +241,9 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
           {/* 1. View Details Button */}
           <button
             onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100 text-blue-900 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50/70 hover:bg-teal-100 text-teal-950 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
           >
-            <Eye className="h-4 w-4 text-blue-700" />
+            <Eye className="h-4 w-4 text-teal-700" />
             <span>View Details</span>
           </button>
 
@@ -252,7 +252,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
             <>
               <button
                 onClick={handleApprove}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Approve</span>
@@ -260,7 +260,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
 
               <button
                 onClick={() => setRejectOpen(true)}
-                className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
               >
                 <XCircle className="h-4 w-4 text-rose-600" />
                 <span>Reject</span>
@@ -272,7 +272,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
           {sub.status === "approved" && (
             <button
               onClick={() => navigate(`/print/${sub.id}`)}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 hover:bg-blue-950 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm shadow-slate-900/25 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-slate-700"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm shadow-teal-900/25 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
             >
               <Printer className="h-4 w-4" />
               <span>Print KYC Form</span>

@@ -1,3 +1,34 @@
+export interface OrgSettings {
+  nameNepali: string;
+  nameEnglish: string;
+  shortName: string;
+  regNo: string;
+  panNo: string;
+  addressNepali: string;
+  addressEnglish: string;
+  phone: string;
+  email: string;
+  cooperativeType: string;
+  logoPreset?: "emblem" | "hands" | "scales";
+  customLogoUrl?: string;
+  isSample: boolean;
+}
+
+export const DEFAULT_ORG_SETTINGS: OrgSettings = {
+  nameNepali: "नेपाल बचत तथा ऋण सहकारी संस्था लिमिटेड",
+  nameEnglish: "Nepal Savings & Credit Cooperative Society Ltd.",
+  shortName: "सहकारी (Coop)",
+  regNo: "दर्ता नं: २०७४/००१ (नमूना)",
+  panNo: "३०००००००१ (Sample)",
+  addressNepali: "काठमाडौँ महानगरपालिका-१०, बागमती प्रदेश, नेपाल",
+  addressEnglish: "Ward 10, Kathmandu Metropolitan City, Bagmati Province, Nepal",
+  phone: "+977-01-4400000",
+  email: "info@coop-sample.org.np",
+  cooperativeType: "बचत तथा ऋण सहकारी संस्था (Savings & Credit Cooperative)",
+  logoPreset: "emblem",
+  isSample: true,
+};
+
 export const STATUS_LABEL: Record<string, string> = {
   invited: "Invitation Sent",
   submitted: "Submitted",

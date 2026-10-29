@@ -13,7 +13,7 @@ export default function OfflineEntry() {
     phone: "",
     membershipCode: "",
     address: "",
-    idDocType: "Aadhaar",
+    idDocType: "Citizenship (नागरिकता)",
   });
   const [idDoc, setIdDoc] = useState<{ dataUrl?: string; name?: string }>({});
   const [busy, setBusy] = useState(false);
@@ -95,9 +95,9 @@ export default function OfflineEntry() {
         <button
           type="button"
           onClick={handleFillDemo}
-          className="flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-900 hover:bg-blue-100 transition"
+          className="flex items-center gap-1 rounded-full bg-teal-50 border border-teal-200 px-3 py-1.5 text-xs font-bold text-teal-900 hover:bg-teal-100 transition cursor-pointer"
         >
-          <Sparkles className="h-3.5 w-3.5 text-blue-700" /> Auto-fill Sample
+          <Sparkles className="h-3.5 w-3.5 text-teal-700" /> Auto-fill Sample
         </button>
       </div>
 
@@ -112,7 +112,7 @@ export default function OfflineEntry() {
               value={form.memberName}
               onChange={(e) => setForm({ ...form, memberName: e.target.value })}
               placeholder="e.g. Ram Bahadur"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             />
           </Field>
           <Field label="Mobile Phone Number" required>
@@ -121,7 +121,7 @@ export default function OfflineEntry() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="e.g. 9812345678"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100 font-mono"
             />
           </Field>
         </div>
@@ -132,22 +132,27 @@ export default function OfflineEntry() {
               value={form.membershipCode}
               onChange={(e) => setForm({ ...form, membershipCode: e.target.value })}
               placeholder="e.g. MEM008 (or auto)"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             />
           </Field>
           <Field label="Identity Document Type">
             <select
               value={form.idDocType}
               onChange={(e) => setForm({ ...form, idDocType: e.target.value })}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100 bg-white"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100 bg-white cursor-pointer"
             >
-              {["Aadhaar", "Citizenship", "PAN Card", "Voter ID", "Passport", "Driving License"].map(
-                (t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                )
-              )}
+              {[
+                "Citizenship (नागरिकता)",
+                "National ID (राष्ट्रिय परिचयपत्र)",
+                "Passport (राहदानी)",
+                "PAN Card (स्थायी लेखा नं.)",
+                "Voter ID (मतदाता परिचयपत्र)",
+                "Driving License (सवारी चालक अनुमतिपत्र)",
+              ].map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
@@ -158,8 +163,8 @@ export default function OfflineEntry() {
             rows={3}
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
-            placeholder="House no., street, ward, village/city, district"
-            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+            placeholder="Ward no., street, municipality / rural municipality, district"
+            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
           />
         </Field>
 
@@ -207,7 +212,7 @@ export default function OfflineEntry() {
         <button
           type="submit"
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-700 hover:bg-blue-800 active:scale-[0.98] py-3.5 text-sm font-bold text-white shadow-md shadow-blue-700/20 transition disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-700 hover:bg-teal-800 active:scale-[0.98] py-3.5 text-sm font-bold text-white shadow-md shadow-teal-900/20 transition disabled:opacity-60 cursor-pointer"
         >
           {busy ? (
             <Loader2 className="h-4 w-4 animate-spin" />
