@@ -38,7 +38,7 @@ const STATUS_STYLES: Record<
   },
   approved: {
     pill: "bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold",
-    dot: "bg-emerald-600",
+    dot: "bg-[#059669]",
     text: "text-emerald-800",
     bg: "bg-emerald-50",
   },
@@ -49,10 +49,10 @@ const STATUS_STYLES: Record<
     bg: "bg-rose-50",
   },
   printed: {
-    pill: "bg-teal-50 text-teal-800 border-teal-300 font-semibold",
-    dot: "bg-teal-700",
-    text: "text-teal-800",
-    bg: "bg-teal-50",
+    pill: "bg-[#DDF3E7] text-[#145C45] border-[#145C45]/30 font-semibold",
+    dot: "bg-[#145C45]",
+    text: "text-[#145C45]",
+    bg: "bg-[#DDF3E7]",
   },
 };
 
@@ -306,22 +306,22 @@ export function SmsModal({
   return (
     <Modal open={open} onClose={onClose} title="SMS Delivered to Member">
       <div className="space-y-4">
-        <div className="flex items-center gap-3 rounded-2xl bg-teal-50/80 p-3.5 border border-teal-100">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-800 text-white shadow-sm">
+        <div className="flex items-center gap-3 rounded-2xl bg-[#DDF3E7]/80 p-3.5 border border-[#145C45]/20">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#145C45] text-white shadow-sm">
             <Smartphone className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-teal-900/80">
-              Recipient: <span className="font-bold text-teal-950">{data.name}</span>
+            <p className="text-xs font-semibold text-[#145C45]/80">
+              Recipient: <span className="font-bold text-[#145C45]">{data.name}</span>
             </p>
-            <p className="text-xs text-teal-800 font-mono">+977 {data.phone}</p>
+            <p className="text-xs text-[#145C45] font-mono">+977 {data.phone}</p>
           </div>
         </div>
 
         {/* Realistic Mobile SMS Card */}
         <div className="rounded-2xl border-2 border-slate-200 bg-slate-900 p-4 text-white shadow-inner">
           <div className="mb-2 flex items-center justify-between text-[11px] text-slate-400">
-            <span className="flex items-center gap-1 font-semibold text-teal-300">
+            <span className="flex items-center gap-1 font-semibold text-[#DDF3E7]">
               <MessageSquare className="h-3 w-3" /> SMS &middot; {orgTag.toUpperCase()}
             </span>
             <span>Just now</span>
@@ -331,10 +331,9 @@ export function SmsModal({
               Dear <span className="font-semibold text-white">{data.name}</span>,
             </p>
             <p className="mt-1">
-              Please complete your cooperative KYC verification using this secure
-              link:
+              Please complete your cooperative KYC verification using this secure link:
             </p>
-            <div className="my-2.5 rounded-lg bg-teal-950/80 p-2.5 border border-teal-800/80 font-mono text-xs text-teal-200">
+            <div className="my-2.5 rounded-lg bg-[#145C45]/80 p-2.5 border border-[#145C45] font-mono text-xs text-[#DDF3E7]">
               <div className="flex items-center justify-between">
                 <span>🔗 Link:</span>
                 <span className="font-bold text-white underline">
@@ -357,14 +356,14 @@ export function SmsModal({
         <div className="space-y-2 pt-1">
           <button
             onClick={handleOpenLink}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-600 hover:bg-teal-700 active:scale-[0.99] py-3.5 text-sm font-bold text-white shadow-md shadow-teal-700/20 transition cursor-pointer"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] active:scale-[0.99] py-3.5 text-sm font-bold text-white shadow-md transition cursor-pointer"
           >
             <ExternalLink className="h-4 w-4" /> Open Member KYC Form (Step 3)
           </button>
           <div className="flex gap-2">
             <button
               onClick={copyText}
-              className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              className="flex-1 rounded-xl border border-[#145C45]/30 bg-[#DDF3E7]/40 py-2.5 text-xs font-semibold text-[#145C45] hover:bg-[#DDF3E7] transition cursor-pointer"
             >
               {copied ? "✓ Copied to clipboard!" : "Copy SMS Text"}
             </button>

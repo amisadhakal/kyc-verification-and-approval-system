@@ -75,7 +75,7 @@ export default function Dashboard() {
       label: "Printed",
       value: stats.printed,
       icon: Printer,
-      cls: "bg-teal-50 text-teal-700 border border-teal-200/80",
+      cls: "bg-[#DDF3E7] text-[#145C45] border border-[#145C45]/20",
     },
     {
       label: "Total Members",
@@ -101,7 +101,7 @@ export default function Dashboard() {
 
       {/* Pending Review Alert Banner */}
       {stats.pending > 0 && (
-        <div className="rounded-2xl bg-gradient-to-r from-teal-950 via-slate-900 to-teal-900 p-4 text-white shadow-lg border border-teal-800/80">
+        <div className="rounded-2xl bg-gradient-to-r from-[#145C45] via-[#1a7357] to-[#145C45] p-4 text-white shadow-lg border border-[#0f4534]/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 ring-1 ring-amber-400/30">
@@ -111,14 +111,14 @@ export default function Dashboard() {
                 <p className="text-sm font-extrabold text-white">
                   {stats.pending} Submission{stats.pending > 1 ? "s" : ""} Waiting for Review
                 </p>
-                <p className="text-xs text-teal-200">
+                <p className="text-xs text-[#DDF3E7]">
                   New member KYC submissions have been received and need your decision.
                 </p>
               </div>
             </div>
             <button
               onClick={() => setFilter("pending")}
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95 px-4 py-2 text-xs font-bold text-white transition self-start sm:self-auto shadow-sm cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#DDF3E7] hover:bg-white active:scale-95 px-4 py-2 text-xs font-bold text-[#145C45] transition self-start sm:self-auto shadow-sm cursor-pointer"
             >
               Filter Pending Queue →
             </button>
@@ -154,8 +154,8 @@ export default function Dashboard() {
               onClick={() => setFilter(f.key)}
               className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 cursor-pointer ${
                 filter === f.key
-                  ? "bg-teal-700 text-white shadow-sm ring-1 ring-teal-600"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  ? "bg-[#145C45] text-white shadow-sm"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-[#DDF3E7] hover:text-[#145C45] hover:border-[#145C45]/30"
               }`}
             >
               {f.label}
@@ -235,24 +235,24 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
         </div>
       </div>
 
-      {/* User-Friendly Action Buttons (Focused on Mobile & High Usability) */}
+      {/* Action Buttons */}
       <div className="pt-2 border-t border-slate-100">
         <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2">
-          {/* 1. View Details Button */}
+          {/* View Details */}
           <button
             onClick={() => navigate(`/admin/submissions/${sub.id}`)}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50/70 hover:bg-teal-100 text-teal-950 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-[#145C45]/30 bg-[#DDF3E7]/60 hover:bg-[#DDF3E7] text-[#145C45] font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-[#145C45]/30 cursor-pointer"
           >
-            <Eye className="h-4 w-4 text-teal-700" />
+            <Eye className="h-4 w-4" />
             <span>View Details</span>
           </button>
 
-          {/* 2 & 3. Approve and Reject Buttons (if pending or submitted) */}
+          {/* Approve and Reject */}
           {(sub.status === "pending" || sub.status === "submitted") && (
             <>
               <button
                 onClick={handleApprove}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Approve</span>
@@ -268,18 +268,18 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
             </>
           )}
 
-          {/* 4. Print Button (if approved) */}
+          {/* Print Button */}
           {sub.status === "approved" && (
             <button
               onClick={() => navigate(`/print/${sub.id}`)}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm shadow-teal-900/25 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-[#145C45] hover:bg-[#0f4534] text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-[#145C45] cursor-pointer"
             >
               <Printer className="h-4 w-4" />
               <span>Print KYC Form</span>
             </button>
           )}
 
-          {/* 5. Reprint Button (if already printed) */}
+          {/* Reprint */}
           {sub.status === "printed" && (
             <button
               onClick={() => navigate(`/print/${sub.id}`)}

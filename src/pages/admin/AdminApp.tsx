@@ -34,16 +34,16 @@ export default function AdminApp({
   const org = state.orgSettings;
 
   return (
-    <div className="min-h-dvh bg-slate-100 text-slate-900">
-      {/* ── Main Dark Teal Header ─────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 border-b border-teal-900 bg-teal-950 shadow-md">
+    <div className="min-h-dvh bg-[#F8FAFC] text-slate-900">
+      {/* ── Main Dark Green Header ─────────────────────────────────────── */}
+      <header className="sticky top-0 z-30 border-b border-[#0f4534] bg-[#145C45] shadow-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           {/* Left: logo / back */}
           <div className="flex items-center gap-3 min-w-0">
             {isDetail ? (
               <button
                 onClick={() => navigate("/admin")}
-                className="rounded-full bg-teal-900/80 p-2 text-teal-200 transition hover:bg-teal-800 active:scale-95 cursor-pointer shrink-0"
+                className="rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 active:scale-95 cursor-pointer shrink-0"
                 aria-label="Back to dashboard"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -57,12 +57,12 @@ export default function AdminApp({
                   {org.nameNepali}
                 </h1>
                 {org.isSample && (
-                  <span className="hidden sm:inline-block rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.2 text-[10px] font-bold">
+                  <span className="hidden sm:inline-block rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 text-[10px] font-bold">
                     Sample / Placeholder
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-medium text-teal-200 truncate">
+              <p className="text-[11px] font-medium text-[#DDF3E7] truncate">
                 {org.nameEnglish} &middot; {org.addressNepali || org.addressEnglish}
               </p>
             </div>
@@ -70,9 +70,9 @@ export default function AdminApp({
 
           {/* Right: role badge */}
           <div className="shrink-0 flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-teal-900/80 border border-teal-800/80 px-3 py-1 text-xs font-bold text-teal-200">
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1 text-xs font-bold text-[#DDF3E7]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              व्यवस्थापक (Manager) &middot; Suresh
+              व्यवस्थापक (Manager)
             </span>
           </div>
         </div>
@@ -94,8 +94,8 @@ export default function AdminApp({
                     }
                     className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition active:scale-95 sm:text-sm cursor-pointer ${
                       active
-                        ? "bg-teal-600 text-white shadow-md shadow-teal-950/40 ring-1 ring-teal-400/40"
-                        : "bg-teal-900/60 text-teal-200 hover:bg-teal-900 hover:text-white"
+                        ? "bg-[#DDF3E7] text-[#145C45] shadow-md font-extrabold"
+                        : "bg-white/10 text-[#DDF3E7] hover:bg-white/20 hover:text-white"
                     }`}
                   >
                     <Icon className="h-4 w-4" />

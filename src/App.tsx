@@ -28,7 +28,7 @@ function LandingPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center bg-gradient-to-br from-teal-950 via-slate-900 to-emerald-950 p-4">
+    <div className="min-h-dvh flex flex-col items-center justify-center bg-gradient-to-br from-[#145C45] via-[#1a7357] to-[#0f4534] p-4">
       {/* Branding */}
       <div className="mb-6 text-center max-w-md">
         <div className="mx-auto mb-3 flex items-center justify-center">
@@ -37,10 +37,10 @@ function LandingPage() {
         <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
           {org.nameNepali}
         </h1>
-        <p className="mt-0.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-teal-300">
+        <p className="mt-0.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#DDF3E7]">
           {org.nameEnglish}
         </p>
-        <p className="mt-1 text-xs text-teal-200/80">
+        <p className="mt-1 text-xs text-white/70">
           {org.addressNepali || org.addressEnglish}
         </p>
         {org.isSample && (
@@ -51,9 +51,9 @@ function LandingPage() {
       </div>
 
       {/* Member Card */}
-      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-slate-100">
+      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-white/10">
         <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#145C45] text-white shadow-sm">
             <Smartphone className="h-5 w-5" />
           </div>
           <div>
@@ -68,11 +68,11 @@ function LandingPage() {
 
         <form onSubmit={handleOpen} className="space-y-3">
           <div
-            className={`flex items-center gap-2 rounded-2xl border px-4 py-3 transition focus-within:ring-2 focus-within:ring-teal-200 ${
-              error ? "border-red-400" : "border-slate-300 focus-within:border-teal-600"
+            className={`flex items-center gap-2 rounded-2xl border px-4 py-3 transition focus-within:ring-2 focus-within:ring-[#DDF3E7] ${
+              error ? "border-red-400" : "border-slate-300 focus-within:border-[#145C45]"
             }`}
           >
-            <KeyRound className="h-5 w-5 shrink-0 text-teal-700" />
+            <KeyRound className="h-5 w-5 shrink-0 text-[#145C45]" />
             <input
               type="text"
               value={code}
@@ -94,7 +94,7 @@ function LandingPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-600 py-3.5 text-sm font-extrabold text-white shadow-md shadow-teal-700/20 transition hover:bg-teal-700 active:scale-[0.98] cursor-pointer"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] py-3.5 text-sm font-extrabold text-white shadow-md transition hover:bg-[#0f4534] active:scale-[0.98] cursor-pointer"
           >
             Open KYC Form
           </button>
@@ -104,7 +104,7 @@ function LandingPage() {
         <div className="mt-5 border-t border-slate-100 pt-4 text-center">
           <button
             onClick={() => navigate("/admin")}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition hover:text-teal-700 cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition hover:text-[#145C45] cursor-pointer"
           >
             <LogIn className="h-3.5 w-3.5" />
             व्यवस्थापक डेस्क (Manager / Staff Portal)
@@ -114,7 +114,7 @@ function LandingPage() {
 
       {/* Demo hint */}
       <div className="mt-5 w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur">
-        <p className="text-xs font-semibold text-teal-100">
+        <p className="text-xs font-semibold text-[#DDF3E7]">
           Demo — Ram Sharma received invite code{" "}
           <button
             onClick={() => navigate("/kyc/abc123")}
