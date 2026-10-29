@@ -1519,12 +1519,21 @@ function MemberStatusScreen({ member }: { member: Member }) {
         </dl>
       </div>
 
-      <button
-        onClick={() => navigate("/admin")}
-        className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
-      >
-        Go to Manager Portal
-      </button>
+      {member.status === "approved" || member.status === "printed" ? (
+        <button
+          onClick={() => navigate("/")}
+          className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
+        >
+          ← Back to Home
+        </button>
+      ) : (
+        <button
+          onClick={() => navigate("/admin")}
+          className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
+        >
+          Go to Manager Portal
+        </button>
+      )}
     </div>
   );
 }

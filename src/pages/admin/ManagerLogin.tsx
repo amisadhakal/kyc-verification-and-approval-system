@@ -72,6 +72,7 @@ export default function ManagerLogin() {
           <div className="mx-auto mb-3 flex items-center justify-center rounded-2xl p-1 bg-white/10 backdrop-blur-md ring-2 ring-white/20 shadow-2xl">
             <CoopLogo
               settings={org}
+              showStatusDot={false}
               className="h-16 w-16 sm:h-20 sm:w-20 shadow-inner"
               iconClassName="h-9 w-9 sm:h-11 sm:w-11 text-white"
             />
