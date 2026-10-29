@@ -1,131 +1,363 @@
 import { useState, type ReactNode } from "react";
-import { Building2, KeyRound, LogIn, Smartphone } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  ChevronRight,
+  Info,
+  KeyRound,
+  Loader2,
+  Lock,
+  LogIn,
+  MapPin,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Ticket,
+  X,
+} from "lucide-react";
 import { StoreProvider, useStore } from "./lib/store";
 import { navigate, useRoute } from "./lib/router";
 import KycFlow from "./pages/member/KycFlow";
 import AdminApp from "./pages/admin/AdminApp";
+import ManagerLogin from "./pages/admin/ManagerLogin";
+import ProtectedRoute from "./components/ProtectedRoute";
 import PrintView from "./pages/print/PrintView";
 import { CoopLogo } from "./components/CoopLogo";
 
 // ── Landing Page ─────────────────────────────────────────────────────────────
-// Shown when the user opens the app root without a route.
-// Members type their invite code; managers click through to /admin.
+// Refined, trustworthy landing page tailored for Nepali Cooperatives.
+// Members enter their SMS invitation code to initiate OTP verification;
+// Cooperative staff/managers navigate to the review dashboard.
 function LandingPage() {
-  const { state } = useStore();
+  const { state, findByInviteCode } = useStore();
   const org = state.orgSettings;
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
 
   const handleOpen = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = code.trim();
+    const trimmed = code.trim().toUpperCase();
+
     if (!trimmed) {
-      setError("Please enter your invite code from the SMS.");
+      setError("कृपया आफ्नो SMS मा पठाइएको निमन्त्रणा कोड प्रविष्ट गर्नुहोस्। (Please enter your invite code)");
       return;
     }
+
+    setIsValidating(true);
     setError("");
-    navigate(`/kyc/${trimmed.toLowerCase()}`);
+
+    // Simulate realistic validation feedback
+    setTimeout(() => {
+      // Find member by invite code or membership code
+      const memberByInvite = findByInviteCode(trimmed);
+      const memberByCode = state.members.find(
+        (m) => m.membershipCode.toUpperCase() === trimmed
+      );
+      const matched = memberByInvite || memberByCode;
+
+      if (!matched) {
+        setIsValidating(false);
+        setError(
+          "निमन्त्रणा कोड फेला परेन। कृपया आफ्नो सहकारी SMS मा प्राप्त कोड पुनः जाँच गर्नुहोस्।"
+        );
+        return;
+      }
+
+      setIsValidating(false);
+      navigate(`/kyc/${matched.inviteCode.toLowerCase()}`);
+    }, 320);
+  };
+
+  const handleQuickDemoFill = (sampleCode: string) => {
+    setCode(sampleCode);
+    setError("");
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center bg-gradient-to-br from-[#145C45] via-[#1a7357] to-[#0f4534] p-4">
-      {/* Branding */}
-      <div className="mb-6 text-center max-w-md">
-        <div className="mx-auto mb-3 flex items-center justify-center">
-          <CoopLogo settings={org} className="h-16 w-16 shadow-2xl" iconClassName="h-9 w-9" />
-        </div>
-        <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-          {org.nameNepali}
-        </h1>
-        <p className="mt-0.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#DDF3E7]">
-          {org.nameEnglish}
-        </p>
-        <p className="mt-1 text-xs text-white/70">
-          {org.addressNepali || org.addressEnglish}
-        </p>
-        {org.isSample && (
-          <span className="mt-2 inline-block rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 text-[10px] font-bold">
-            Sample Demonstration System &middot; Organization Pending Confirmation
-          </span>
-        )}
+    <div className="relative min-h-dvh flex flex-col items-center justify-between bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 selection:bg-[#DDF3E7] selection:text-[#145C45] overflow-x-hidden">
+      {/* ── Background Subtle Decorative Elements (Restrained) ───────── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.06]"
+      >
+        <svg
+          className="h-full w-full"
+          xmlns="http://www.w3.org/2000/svg"
+          width="100%"
+          height="100%"
+          fill="none"
+        >
+          <defs>
+            <pattern
+              id="coop-grid"
+              width="48"
+              height="48"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 48 0 L 0 0 0 48"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="1"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#coop-grid)" />
+        </svg>
       </div>
 
-      {/* Member Card */}
-      <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-white/10">
-        <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#145C45] text-white shadow-sm">
-            <Smartphone className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-base font-extrabold text-slate-900">
-              सदस्य KYC पोर्टल (Member Portal)
-            </h2>
-            <p className="text-xs text-slate-500">
-              Enter your invite code received via SMS
-            </p>
-          </div>
-        </div>
+      {/* Ambient Radial Highlights */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-[#DDF3E7]/10 blur-3xl"
+      />
 
-        <form onSubmit={handleOpen} className="space-y-3">
-          <div
-            className={`flex items-center gap-2 rounded-2xl border px-4 py-3 transition focus-within:ring-2 focus-within:ring-[#DDF3E7] ${
-              error ? "border-red-400" : "border-slate-300 focus-within:border-[#145C45]"
-            }`}
-          >
-            <KeyRound className="h-5 w-5 shrink-0 text-[#145C45]" />
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value.toUpperCase());
-                setError("");
-              }}
-              placeholder="Enter Invite Code (e.g. ABC123)"
-              className="w-full bg-transparent text-sm font-bold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
-              autoCapitalize="characters"
-              autoCorrect="off"
-              spellCheck={false}
+      {/* ── Header: Cooperative Identity & Branding ─────────────────── */}
+      <header className="relative z-10 w-full max-w-xl text-center mb-6 sm:mb-8 animate-fade-down">
+        {/* Logo Container */}
+        <div className="mx-auto mb-3 flex items-center justify-center">
+          <div className="rounded-2xl p-1 bg-white/10 backdrop-blur-md ring-2 ring-white/20 shadow-2xl">
+            <CoopLogo
+              settings={org}
+              className="h-16 w-16 sm:h-20 sm:w-20 shadow-inner"
+              iconClassName="h-9 w-9 sm:h-11 sm:w-11"
             />
           </div>
+        </div>
 
-          {error && (
-            <p className="text-xs font-semibold text-red-600">{error}</p>
+        {/* Nepali Name */}
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight text-balance">
+          {org.nameNepali}
+        </h1>
+
+        {/* English Name */}
+        <p className="mt-1 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#DDF3E7]">
+          {org.nameEnglish}
+        </p>
+
+        {/* Address and Registration Badges */}
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-[#DDF3E7]/85 font-medium">
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5 text-[#DDF3E7]" />
+            {org.addressNepali || org.addressEnglish}
+          </span>
+          {org.regNo && (
+            <span className="hidden sm:inline-block text-[#DDF3E7]/60">
+              &middot; {org.regNo}
+            </span>
           )}
+        </div>
 
-          <button
-            type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] py-3.5 text-sm font-extrabold text-white shadow-md transition hover:bg-[#0f4534] active:scale-[0.98] cursor-pointer"
-          >
-            Open KYC Form
-          </button>
-        </form>
+        {/* Demo Indicator (Clearly Labeled, Non-Invented) */}
+        {org.isSample && (
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1 text-[11px] font-semibold text-amber-200 backdrop-blur-sm">
+            <Sparkles className="h-3.5 w-3.5 text-amber-300 shrink-0" />
+            <span>नमूना प्रदर्शन प्रणाली · Demo Environment (Configurable)</span>
+          </div>
+        )}
+      </header>
 
-        {/* Manager link */}
-        <div className="mt-5 border-t border-slate-100 pt-4 text-center">
+      {/* ── Center: Member Login Card ───────────────────────────────── */}
+      <main className="relative z-10 w-full max-w-md my-auto animate-fade-up">
+        <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-white/20 transition-all">
+          {/* Card Header */}
+          <div className="mb-6 flex items-start gap-3.5">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#145C45] text-white shadow-md shadow-[#145C45]/20">
+              <Smartphone className="h-6 w-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-extrabold text-slate-900 leading-tight">
+                  सदस्य पहिचान (KYC) पोर्टल
+                </h2>
+              </div>
+              <p className="text-xs font-semibold text-[#145C45] uppercase tracking-wide mt-0.5">
+                Member Verification Portal
+              </p>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                Enter your invitation code received via SMS to complete verification.
+              </p>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleOpen} className="space-y-4">
+            <div>
+              <label
+                htmlFor="invite-code-input"
+                className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700"
+              >
+                निमन्त्रणा कोड <span className="font-normal text-slate-500">(Invite Code)</span>
+              </label>
+
+              <div
+                className={`relative flex items-center rounded-xl border bg-slate-50/70 transition-all focus-within:bg-white ${
+                  error
+                    ? "border-rose-400 bg-rose-50/20 focus-within:border-rose-500 focus-within:ring-4 focus-within:ring-rose-100"
+                    : "border-slate-300 hover:border-slate-400 focus-within:border-[#145C45] focus-within:ring-4 focus-within:ring-[#DDF3E7]"
+                }`}
+              >
+                <div className="pointer-events-none pl-3.5 text-slate-400 flex items-center">
+                  <KeyRound className="h-5 w-5 text-[#145C45]/80" />
+                </div>
+                <input
+                  id="invite-code-input"
+                  type="text"
+                  value={code}
+                  disabled={isValidating}
+                  onChange={(e) => {
+                    setCode(e.target.value.toUpperCase());
+                    if (error) setError("");
+                  }}
+                  placeholder="e.g. ABC123"
+                  className="h-12 w-full bg-transparent px-3 text-sm sm:text-base font-bold font-mono tracking-wider text-slate-900 outline-none placeholder:font-normal placeholder:font-sans placeholder:tracking-normal placeholder:text-slate-400 disabled:opacity-50"
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  maxLength={12}
+                  autoComplete="one-time-code"
+                />
+                {code && !isValidating && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCode("");
+                      setError("");
+                    }}
+                    className="p-2 text-slate-400 hover:text-slate-600 transition"
+                    aria-label="Clear code"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Validation Error Message */}
+              {error && (
+                <div className="mt-2 flex items-start gap-1.5 text-xs font-semibold text-rose-700 bg-rose-50 rounded-lg p-2.5 border border-rose-200 animate-fade-in">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 mt-0.5" />
+                  <p className="leading-tight">{error}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isValidating}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#15803D] hover:bg-[#145C45] active:scale-[0.99] text-white font-extrabold text-sm sm:text-base shadow-md shadow-[#15803D]/25 transition cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+            >
+              {isValidating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>जाँच गरिँदैछ (Verifying Code)...</span>
+                </>
+              ) : (
+                <>
+                  <span>केवाईसी फारम खोल्नुहोस् (Open KYC Form)</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Clean Divider */}
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-3 text-slate-400 font-medium">
+                सहकारी व्यवस्थापन (Staff Access)
+              </span>
+            </div>
+          </div>
+
+          {/* Manager / Staff Portal Navigation */}
           <button
-            onClick={() => navigate("/admin")}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 transition hover:text-[#145C45] cursor-pointer"
+            onClick={() => navigate("/manager-login")}
+            className="group flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-[#DDF3E7]/60 hover:border-[#145C45]/30 p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[#145C45]/20 cursor-pointer"
           >
-            <LogIn className="h-3.5 w-3.5" />
-            व्यवस्थापक डेस्क (Manager / Staff Portal)
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-200 text-[#145C45] group-hover:border-[#145C45]/40 transition shadow-xs">
+                <ShieldCheck className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-800 group-hover:text-[#145C45] transition truncate">
+                  व्यवस्थापक डेस्क (Manager Portal)
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Review, approve &amp; print KYC records
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-[#145C45] group-hover:translate-x-0.5 transition" />
           </button>
         </div>
-      </div>
 
-      {/* Demo hint */}
-      <div className="mt-5 w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-4 text-center backdrop-blur">
-        <p className="text-xs font-semibold text-[#DDF3E7]">
-          Demo — Ram Sharma received invite code{" "}
-          <button
-            onClick={() => navigate("/kyc/abc123")}
-            className="font-extrabold text-amber-300 underline underline-offset-2 cursor-pointer"
-          >
-            ABC123
-          </button>{" "}
-          with OTP{" "}
-          <span className="font-mono font-extrabold text-amber-300">123456</span>
+        {/* ── Demo Information & Evaluation Sandbox ─────────────────── */}
+        {/* Intentional, clearly segregated testing helper for supervisors & evaluators */}
+        <section
+          aria-label="Demonstration Notice"
+          className="mt-4 rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md text-white/90 shadow-md"
+        >
+          <div className="flex items-start gap-2.5">
+            <Info className="h-4 w-4 text-[#DDF3E7] shrink-0 mt-0.5" />
+            <div className="text-xs space-y-1.5 flex-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-[#DDF3E7]">
+                  प्रणाली मूल्याङ्कन (Prototype Sandbox)
+                </span>
+                <span className="rounded bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-amber-200">
+                  TEST MODE
+                </span>
+              </div>
+              <p className="text-[11px] text-white/80 leading-relaxed">
+                In this demo, SMS invitations and OTPs are generated inside the{" "}
+                <button
+                  type="button"
+                  onClick={() => navigate("/manager-login")}
+                  className="font-bold text-white underline underline-offset-2 hover:text-amber-200 cursor-pointer"
+                >
+                  Manager Portal
+                </button>
+                . For quick evaluation with sample member{" "}
+                <strong className="text-white">Ram Sharma</strong>:
+              </p>
+              <div className="flex items-center gap-2 pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleQuickDemoFill("ABC123")}
+                  className="inline-flex items-center gap-1 rounded-lg bg-white/15 hover:bg-white/25 active:scale-95 px-2.5 py-1 text-[11px] font-bold text-amber-200 transition cursor-pointer"
+                >
+                  <Ticket className="h-3 w-3" />
+                  Auto-fill Sample Code: ABC123
+                </button>
+                <span className="text-[10px] text-white/60">
+                  (OTP is delivered via SMS simulator)
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* ── Footer: Copyright & System Note ──────────────────────────── */}
+      <footer className="relative z-10 w-full max-w-xl text-center mt-6 pt-4 border-t border-white/10 text-[11px] text-[#DDF3E7]/70 space-y-1">
+        <p>
+          &copy; {new Date().getFullYear()} {org.nameNepali} &middot; {org.nameEnglish}
         </p>
-      </div>
+        <p className="text-[10px] text-white/50">
+          Cooperative KYC Verification &amp; KYM Approval Management System (Nepal)
+        </p>
+      </footer>
     </div>
   );
 }
@@ -146,8 +378,14 @@ function Routes() {
     const code = parts[1] ?? "";
     if (!code) return <LandingPage />;
     page = <KycFlow key={code.toLowerCase()} code={code.toLowerCase()} />;
+  } else if (parts[0] === "manager-login") {
+    page = <ManagerLogin />;
   } else if (parts[0] === "admin") {
-    page = <AdminApp section={parts[1] ?? "dashboard"} id={parts[2]} />;
+    page = (
+      <ProtectedRoute>
+        <AdminApp section={parts[1] ?? "dashboard"} id={parts[2]} />
+      </ProtectedRoute>
+    );
   } else if (parts[0] === "print" && parts[1]) {
     page = <PrintView id={parts[1]} />;
   } else {

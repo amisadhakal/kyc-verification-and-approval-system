@@ -3,11 +3,13 @@ import {
   Building2,
   ClipboardList,
   LayoutDashboard,
+  LogOut,
   Settings,
   Users,
 } from "lucide-react";
 import { useStore } from "../../lib/store";
 import { navigate } from "../../lib/router";
+import { endManagerDemoSession } from "../../lib/auth";
 import Dashboard from "./Dashboard";
 import Members from "./Members";
 import OfflineEntry from "./OfflineEntry";
@@ -32,6 +34,11 @@ export default function AdminApp({
   const { state } = useStore();
   const isDetail = section === "submissions";
   const org = state.orgSettings;
+
+  const handleLogout = () => {
+    endManagerDemoSession();
+    navigate("/manager-login");
+  };
 
   return (
     <div className="min-h-dvh bg-[#F8FAFC] text-slate-900">
@@ -68,8 +75,16 @@ export default function AdminApp({
             </div>
           </div>
 
-          {/* Right: role badge */}
+          {/* Right: role badge & logout */}
           <div className="shrink-0 flex items-center gap-2">
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1.5 text-xs font-bold text-[#DDF3E7] hover:bg-white/20 hover:text-white active:scale-95 transition cursor-pointer"
+              aria-label="Logout from manager portal"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Logout</span>
+            </button>
             <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1 text-xs font-bold text-[#DDF3E7]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               व्यवस्थापक (Manager)

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KYC Verification &amp; Approval System — Implementation Status Report</title>
+<style>
+  @page { size: A4 portrait; margin: 9mm 11mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Plus Jakarta Sans", "Nirmala UI", "Mangal", Arial, sans-serif;
+    font-size: 8.05pt; line-height: 1.26; color: #0f172a; background: #e2e8f0;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; min-height: 297mm; margin: 8mm auto; padding: 9mm 11mm;
+    background: #fff; box-shadow: 0 6px 28px rgba(15, 23, 42, .22);
+  }
+  @media print {
+    body { background: #fff; }
+    .page { width: auto; min-height: 0; margin: 0; padding: 0; box-shadow: none; }
+    .no-print { display: none !important; }
+    table, .box, .sign, .snap { page-break-inside: avoid; }
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  .head { display: flex; align-items: flex-start; gap: 3.6mm; border-bottom: .65mm solid #145C45; padding-bottom: 2mm; }
+  .mark {
+    width: 13.5mm; height: 13.5mm; border-radius: 2mm; background: #145C45; color: #fff;
+    display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    font-size: 10pt; font-weight: 800; letter-spacing: .3pt;
+  }
+  .titles { flex: 1 1 auto; min-width: 0; }
+  .eyebrow { font-size: 6.4pt; font-weight: 700; letter-spacing: .8pt; text-transform: uppercase; color: #6b7a72; }
+  h1 { margin: .4mm 0 .6mm; font-size: 14.4pt; line-height: 1.06; letter-spacing: -.2pt; color: #0b3f30; }
+  .sub { font-size: 8pt; font-weight: 600; color: #145C45; }
+  .headmeta { flex: 0 0 auto; text-align: right; font-size: 7pt; color: #475569; line-height: 1.45; padding-top: .2mm; }
+  .headmeta b { color: #0f172a; }
+
+  .meta {
+    display: flex; flex-wrap: wrap; gap: .6mm 4mm; margin: 1.4mm 0 0;
+    font-size: 7pt; color: #52635b;
+  }
+  .meta b { color: #0f172a; }
+
+  .purpose { margin: 1.8mm 0 2mm; font-size: 7.8pt; color: #334155; }
+  .purpose b { color: #0b3f30; }
+
+  /* ── Snapshot ───────────────────────────────────────── */
+  .snap {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    border: .25mm solid #d5e0da; border-radius: 1.1mm; overflow: hidden;
+    margin: 0 0 1.4mm; background: #f8fbf9;
+  }
+  .cell { padding: 1.15mm 1.4mm; border-right: .2mm solid #e2eae5; }
+  .cell:last-child { border-right: 0; }
+  .cell .k { font-size: 5.6pt; font-weight: 800; letter-spacing: .4pt; text-transform: uppercase; color: #708078; }
+  .cell .v { font-size: 7.05pt; font-weight: 700; color: #123f32; margin-top: .2mm; line-height: 1.22; }
+  .cell .v small { display: block; font-size: 6.1pt; font-weight: 500; color: #5b6b63; }
+
+  /* ── Sections ───────────────────────────────────────── */
+  h2 {
+    margin: 1.7mm 0 .9mm; padding-bottom: .45mm; border-bottom: .3mm solid #cfe0d7;
+    font-size: 8.3pt; letter-spacing: .3pt; text-transform: uppercase; color: #145C45;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  h2 .count { font-size: 6.4pt; font-weight: 700; letter-spacing: .2pt; color: #64748b; text-transform: none; }
+
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th {
+    text-align: left; font-size: 6.25pt; font-weight: 800; letter-spacing: .35pt;
+    text-transform: uppercase; color: #52635b; background: #edf5f1;
+    padding: .78mm 1.25mm; border-bottom: .22mm solid #cfe0d7;
+  }
+  td { padding: .82mm 1.25mm; border-bottom: .18mm solid #e6ece9; vertical-align: top; font-size: 7.25pt; line-height: 1.21; color: #1f2937; }
+  td.num { color: #8a9991; font-weight: 700; text-align: center; font-size: 6.6pt; }
+  td.mod { font-weight: 700; color: #0b3f30; }
+  tr:last-child td { border-bottom: 0; }
+
+  .chip {
+    display: inline-block; font-size: 5.4pt; font-weight: 800; letter-spacing: .3pt;
+    padding: .2mm 1mm; border-radius: .7mm; margin-right: .9mm; vertical-align: .25mm;
+    white-space: nowrap;
+  }
+  .no { background: #fdecec; color: #a51f1f; border: .18mm solid #f2b8b8; }
+  .part { background: #fff6e5; color: #8a5200; border: .18mm solid #f0d29b; }
+  td.mod .chip { display: block; width: max-content; margin: 0 0 .3mm; }
+  td.mod .modname { display: block; }
+
+  /* ── Readiness & next phase ─────────────────────────── */
+  .box {
+    margin-top: 1.9mm; border: .28mm solid #bcd9c9; background: #f2f9f5;
+    border-left: 1mm solid #145C45; border-radius: 1.1mm; padding: 1.6mm 2.1mm;
+    font-size: 7.45pt; line-height: 1.26; color: #1e3a30;
+  }
+  .box b { color: #0b3f30; }
+  .box .title, .next .title {
+    font-size: 6.2pt; font-weight: 800; letter-spacing: .45pt; text-transform: uppercase;
+    color: #145C45; margin-right: 1.1mm;
+  }
+  .next { margin-top: 1.7mm; font-size: 7.25pt; line-height: 1.26; color: #334155; }
+  .next .title { color: #52635b; }
+
+  /* ── Sign-off ───────────────────────────────────────── */
+  .sign { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8mm; margin-top: 2.5mm; }
+  .sign div { border-top: .26mm solid #94a3a0; padding-top: .8mm; font-size: 6.2pt; color: #52635b; line-height: 1.4; }
+  .sign b { display: inline-block; font-size: 6.4pt; color: #334155; margin-right: .8mm; }
+  .sign .line { display: block; margin-top: 2.6mm; }
+  .foot { margin-top: 1.7mm; display: flex; justify-content: space-between; font-size: 5.9pt; color: #94a3a0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="head">
+    <div class="mark">KYC</div>
+    <div class="titles">
+      <div class="eyebrow">Nepal Cooperative Sector &middot; Member Due Diligence</div>
+      <h1>KYC Verification &amp; Approval System</h1>
+      <div class="sub">Implementation Status Report &middot; कार्यान्वयन स्थिति प्रतिवेदन</div>
+    </div>
+    <div class="headmeta">
+      <div><b>29 October 2026</b></div>
+      <div>Report v1.0</div>
+      <div>System v0.0.1 (prototype)</div>
+    </div>
+  </div>
+
+  <div class="meta">
+    <span><b>Prepared for:</b> Management / Higher Authorities</span>
+    <span><b>Prepared by:</b> System Development Team</span>
+    <span><b>Basis:</b> direct review of the working build</span>
+  </div>
+
+  <p class="purpose"><b>Purpose.</b> This report states factually what the working build does and does not do. Only verified functionality is listed as complete; planned work is not.</p>
+
+  <!-- SNAPSHOT -->
+  <div class="snap">
+    <div class="cell"><div class="k">Platform</div><div class="v">Web app<small>React 19, TypeScript, Vite</small></div></div>
+    <div class="cell"><div class="k">Data storage</div><div class="v">LocalStorage<small>One browser, no database</small></div></div>
+    <div class="cell"><div class="k">Deployment</div><div class="v">Local build<small>No production server</small></div></div>
+    <div class="cell"><div class="k">Demo records</div><div class="v">5 members<small>4 submissions: 2 pending, 1 approved, 1 rejected</small></div></div>
+    <div class="cell"><div class="k">Working modules</div><div class="v">13<small>End-to-end journey works</small></div></div>
+    <div class="cell"><div class="k">Automated tests</div><div class="v">0<small>No CI or monitoring</small></div></div>
+  </div>
+
+  <!-- IMPLEMENTED -->
+  <h2>1. Implemented and working <span class="count">13 modules</span></h2>
+  <table>
+    <colgroup><col style="width:5.5mm" /><col style="width:36mm" /><col /></colgroup>
+    <thead>
+      <tr><th style="text-align:center">#</th><th>Module</th><th>Verified functionality</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="mod">Member access portal</td><td>Invite or membership-code entry, validation/error messages, bilingual Nepali/English branding.</td></tr>
+      <tr><td class="num">2</td><td class="mod">OTP verification</td><td>6-digit entry, auto-advance/paste, countdown, resend, invalid-code handling (SMS simulated).</td></tr>
+      <tr><td class="num">3</td><td class="mod">Step 1 &mdash; General details</td><td>Client type (5), verified mobile, online/offline, branch (15), PAN, validated email.</td></tr>
+      <tr><td class="num">4</td><td class="mod">Step 2 &mdash; Address details</td><td>Permanent + optional temporary address; 7 provinces &rarr; 76 districts &rarr; municipality cascade.</td></tr>
+      <tr><td class="num">5</td><td class="mod">Step 3 &mdash; Documents</td><td>9 upload slots (citizenship front/back, selfie, national ID, PAN, KYC form, photo, agreement, birth/company registration); images compressed before storage.</td></tr>
+      <tr><td class="num">6</td><td class="mod">Step 4 &mdash; Agreement</td><td>15-clause Nepali agreement, print option, mandatory consent, submit to review.</td></tr>
+      <tr><td class="num">7</td><td class="mod">Manager dashboard</td><td>5 KPI counters, pending alert, status filters, submission cards, quick approve/reject.</td></tr>
+      <tr><td class="num">8</td><td class="mod">Review &amp; decision</td><td>Full record, status stepper, image lightbox, approve, reject with preset or custom remark.</td></tr>
+      <tr><td class="num">9</td><td class="mod">Official printing</td><td>A4 form with organization header, photo, audit block, signature/seal blocks; print / Save as PDF; reprint; marks &ldquo;Printed&rdquo;.</td></tr>
+      <tr><td class="num">10</td><td class="mod">Member registry</td><td>Manual add, CSV import with preview and sample template, invite code + OTP, copy link, regenerate OTP.</td></tr>
+      <tr><td class="num">11</td><td class="mod">Offline KYC desk</td><td>Manual KYC entry with scanned ID for members without smartphones; routed to the pending queue.</td></tr>
+      <tr><td class="num">12</td><td class="mod">Organization settings</td><td>Names, cooperative type, reg. no., PAN, address, contact, logo, sample flag; applied to portal, SMS and print.</td></tr>
+      <tr><td class="num">13</td><td class="mod">Status tracking</td><td>Invited &rarr; pending &rarr; approved/rejected &rarr; printed; member status screen; survives refresh.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- NOT IMPLEMENTED -->
+  <h2>2. Not implemented / present limitations <span class="count">11 items</span></h2>
+  <table>
+    <colgroup><col style="width:5.5mm" /><col style="width:40mm" /><col /></colgroup>
+    <thead>
+      <tr><th style="text-align:center">#</th><th>Area</th><th>Status and impact</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Server &amp; database</span></td><td>No backend, API or database. Records live in this browser only, so other devices cannot see them. Clearing storage or exceeding the ~5 MB quota loses records silently.</td></tr>
+      <tr><td class="num">2</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Login, roles &amp; access</span></td><td>The manager portal (/admin) opens without login. No admin/reviewer/branch roles or permissions; the reviewer is hard-coded as &ldquo;Manager &middot; Suresh&rdquo;.</td></tr>
+      <tr><td class="num">3</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Real SMS / OTP</span></td><td>SMS is simulated and the OTP is shown on screen; expiry is displayed but not enforced on submit; the demo member has a fixed OTP. No gateway or delivery report.</td></tr>
+      <tr><td class="num">4</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Document verification</span></td><td>No OCR, government-ID validation, face/liveness, duplicate or blacklist checks. The reviewer sees only the member photo and one legacy ID image; citizenship, selfie, national ID and other uploads are stored but not viewable or printed.</td></tr>
+      <tr><td class="num">5</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Member notifications</span></td><td>No SMS or email is sent on approval, rejection or printing, although the UI states the member was notified.</td></tr>
+      <tr><td class="num">6</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Rejection / resubmission</span></td><td>A rejected member&rsquo;s link shows only a status screen; there is no resubmit action or manager &ldquo;reopen&rdquo; control. A new submission overwrites the old one, with no history.</td></tr>
+      <tr><td class="num">7</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Reports, search &amp; export</span></td><td>No export (CSV/Excel/PDF), search, date/branch filter, pagination or activity/audit log. CSV exists for member import only.</td></tr>
+      <tr><td class="num">8</td><td class="mod"><span class="chip part">PARTIAL</span><span class="modname">File handling</span></td><td>The stated 5 MB limit is not enforced; uploaded PDFs are stored as a filename placeholder, not the file; large uploads can exhaust storage silently.</td></tr>
+      <tr><td class="num">9</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Privacy &amp; retention</span></td><td>Personal data and documents are stored unencrypted in the browser; no consent log beyond a checkbox, retention/deletion policy, backup or restore.</td></tr>
+      <tr><td class="num">10</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">KYM &amp; integrations</span></td><td>No institutional (company) onboarding fields; no core-banking, accounting or regulator integration; the branch list is fixed in code.</td></tr>
+      <tr><td class="num">11</td><td class="mod"><span class="chip no">NOT DONE</span><span class="modname">Quality &amp; deployment</span></td><td>0 automated tests, no CI, error monitoring or production hosting; the system runs as a local Vite build only.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- READINESS -->
+  <div class="box">
+    <span class="title">Readiness</span>The end-to-end KYC journey is <b>demonstrated and usable for evaluation</b> (13 working modules; 0 automated tests). It is <b>not ready for live member data</b>: 5 core production items remain &mdash; server/database, authentication &amp; roles, real SMS/OTP, document verification, and privacy/backup.
+  </div>
+
+  <div class="next">
+    <span class="title">Next phase</span>(1) Backend, database and document storage; (2) login, roles and audit log; (3) SMS gateway with enforced OTP expiry; (4) reviewer view of all 9 documents plus verification checks; (5) notifications, reports and export; (6) security hardening, backup and retention policy.
+  </div>
+
+  <!-- SIGN-OFF -->
+  <div class="sign">
+    <div><b>Prepared by</b>Name / Designation<span class="line">Date: ________________</span></div>
+    <div><b>Reviewed by</b>Name / Designation<span class="line">Date: ________________</span></div>
+    <div><b>Approved by</b>Name / Designation<span class="line">Date: ________________</span></div>
+  </div>
+
+  <div class="foot">
+    <span>KYC Verification &amp; Approval System &middot; Implementation Status Report</span>
+    <span>Page 1 of 1</span>
+  </div>
+
+</div>
+</body>
+</html>
