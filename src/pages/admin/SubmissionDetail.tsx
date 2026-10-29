@@ -47,7 +47,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
         <p className="mt-3 font-bold text-slate-700">Submission not found</p>
         <button
           onClick={() => navigate("/admin")}
-          className="mt-4 rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-teal-800 transition cursor-pointer"
+          className="mt-4 rounded-xl bg-[#145C45] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#0f4534] transition cursor-pointer"
         >
           Back to Dashboard
         </button>
@@ -71,11 +71,11 @@ export default function SubmissionDetail({ id }: { id: string }) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate("/admin")}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-teal-900 transition cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#145C45] transition cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Submissions
         </button>
-        <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold text-teal-900 border border-teal-200">
+        <span className="rounded-full bg-[#DDF3E7] px-3 py-1 text-xs font-bold text-[#145C45] border border-[#145C45]/30">
           KYC-{sub.membershipCode}
         </span>
       </div>
@@ -170,7 +170,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
           <div className="rounded-2xl border border-slate-200 p-3 bg-slate-50 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-700">Member Photo</span>
-              <span className="text-[10px] text-blue-700 bg-blue-100 font-bold px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-bold text-[#145C45] bg-[#DDF3E7] px-2 py-0.5 rounded-md">
                 Passport Photo
               </span>
             </div>
@@ -206,7 +206,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
               <span className="text-xs font-bold text-slate-700">
                 {sub.idDocType ?? "ID Document"}
               </span>
-              <span className="text-[10px] text-blue-700 bg-blue-100 font-bold px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-bold text-[#145C45] bg-[#DDF3E7] px-2 py-0.5 rounded-md">
                 Front Proof
               </span>
             </div>
@@ -272,7 +272,7 @@ export default function SubmissionDetail({ id }: { id: string }) {
             </div>
             <button
               onClick={handlePrint}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-850 hover:bg-teal-900 bg-teal-900 active:scale-[0.98] py-3.5 text-sm font-extrabold text-white shadow-lg shadow-teal-950/20 transition focus:outline-none focus:ring-4 focus:ring-teal-400 cursor-pointer"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] active:scale-[0.98] py-3.5 text-sm font-extrabold text-white shadow-lg shadow-[#145C45]/20 transition focus:outline-none focus:ring-4 focus:ring-[#DDF3E7] cursor-pointer"
             >
               <Printer className="h-5 w-5" />
               <span>Print Official KYC Document</span>
@@ -282,8 +282,8 @@ export default function SubmissionDetail({ id }: { id: string }) {
 
         {sub.status === "printed" && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 rounded-2xl bg-teal-50 p-3 text-xs font-bold text-teal-900 border border-teal-200">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-teal-700" />
+            <div className="flex items-center gap-2 rounded-2xl bg-[#DDF3E7] p-3 text-xs font-bold text-[#145C45] border border-[#145C45]/30">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#145C45]" />
               This KYC has been printed and archived in society records.
             </div>
             <button

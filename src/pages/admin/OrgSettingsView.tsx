@@ -52,7 +52,7 @@ export default function OrgSettingsView() {
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
               Cooperative Organization Settings
             </h2>
-            <span className="rounded-full bg-teal-50 border border-teal-200 px-2.5 py-0.5 text-[11px] font-bold text-teal-800">
+            <span className="rounded-full bg-[#DDF3E7] border border-[#145C45]/30 px-2.5 py-0.5 text-[11px] font-bold text-[#145C45]">
               Configurable Branding
             </span>
           </div>
@@ -71,13 +71,13 @@ export default function OrgSettingsView() {
       </div>
 
       {/* Notice Banner */}
-      <div className="rounded-2xl border border-teal-200/80 bg-teal-50/60 p-4 text-xs text-teal-950 flex items-start gap-3 shadow-sm">
-        <ShieldAlert className="h-5 w-5 text-teal-700 shrink-0 mt-0.5" />
+      <div className="rounded-2xl border border-[#145C45]/30 bg-[#DDF3E7]/60 p-4 text-xs text-[#145C45] flex items-start gap-3 shadow-sm">
+        <ShieldAlert className="h-5 w-5 text-[#145C45] shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <p className="font-extrabold text-teal-900">
+          <p className="font-extrabold text-[#145C45]">
             Nepal Cooperative Regulatory Compliance Notice
           </p>
-          <p className="text-teal-800 leading-relaxed">
+          <p className="text-[#145C45]/80 leading-relaxed">
             As the final organization has not yet been confirmed, this demo uses neutral placeholder details.
             You can type your real cooperative name, registration number (दर्ता नं.) and PAN below to instantly preview an official live demo.
           </p>
@@ -95,7 +95,7 @@ export default function OrgSettingsView() {
         {/* Card 1: Names & Identity */}
         <div className="rounded-3xl bg-white p-6 shadow-sm border border-slate-200/80 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-teal-700" /> 1. Cooperative Identity &amp; Legal Names
+            <Building2 className="h-4 w-4 text-[#145C45]" /> 1. Cooperative Identity &amp; Legal Names
           </h3>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -109,7 +109,7 @@ export default function OrgSettingsView() {
                 value={form.nameNepali}
                 onChange={(e) => setForm({ ...form, nameNepali: e.target.value })}
                 placeholder="उदा: नेपाल बचत तथा ऋण सहकारी संस्था लि."
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
               <p className="mt-1 text-[11px] text-slate-400">Official legal name registered with Department of Cooperatives.</p>
             </div>
@@ -124,7 +124,7 @@ export default function OrgSettingsView() {
                 value={form.nameEnglish}
                 onChange={(e) => setForm({ ...form, nameEnglish: e.target.value })}
                 placeholder="e.g. Nepal Savings & Credit Cooperative Society Ltd."
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
               <p className="mt-1 text-[11px] text-slate-400">English name used for member portals, SMS, and English certificates.</p>
             </div>
@@ -138,7 +138,7 @@ export default function OrgSettingsView() {
                 value={form.shortName}
                 onChange={(e) => setForm({ ...form, shortName: e.target.value })}
                 placeholder="e.g. Nepal Coop"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
 
@@ -149,7 +149,7 @@ export default function OrgSettingsView() {
               <select
                 value={form.cooperativeType}
                 onChange={(e) => setForm({ ...form, cooperativeType: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100 cursor-pointer"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7] cursor-pointer"
               >
                 {COOPERATIVE_TYPES.map((t) => (
                   <option key={t} value={t}>
@@ -164,7 +164,7 @@ export default function OrgSettingsView() {
         {/* Card 2: Legal Registration Numbers */}
         <div className="rounded-3xl bg-white p-6 shadow-sm border border-slate-200/80 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-teal-700" /> 2. Registration &amp; Tax Information
+            <Sparkles className="h-4 w-4 text-[#145C45]" /> 2. Registration &amp; Tax Information
           </h3>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -177,7 +177,7 @@ export default function OrgSettingsView() {
                 value={form.regNo}
                 onChange={(e) => setForm({ ...form, regNo: e.target.value })}
                 placeholder="उदा: दर्ता नं: २०७४/००१"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
 
@@ -190,7 +190,7 @@ export default function OrgSettingsView() {
                 value={form.panNo}
                 onChange={(e) => setForm({ ...form, panNo: e.target.value })}
                 placeholder="उदा: ३०००००००१"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function OrgSettingsView() {
         {/* Card 3: Address & Contact */}
         <div className="rounded-3xl bg-white p-6 shadow-sm border border-slate-200/80 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-teal-700" /> 3. Registered Address &amp; Contact
+            <Building2 className="h-4 w-4 text-[#145C45]" /> 3. Registered Address &amp; Contact
           </h3>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -212,7 +212,7 @@ export default function OrgSettingsView() {
                 value={form.addressNepali}
                 onChange={(e) => setForm({ ...form, addressNepali: e.target.value })}
                 placeholder="उदा: काठमाडौँ-१०, बागमती प्रदेश, नेपाल"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
 
@@ -225,7 +225,7 @@ export default function OrgSettingsView() {
                 value={form.addressEnglish}
                 onChange={(e) => setForm({ ...form, addressEnglish: e.target.value })}
                 placeholder="e.g. Kathmandu-10, Bagmati Province, Nepal"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
 
@@ -238,7 +238,7 @@ export default function OrgSettingsView() {
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="+977-01-XXXXXXX"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100 font-mono"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7] font-mono"
               />
             </div>
 
@@ -251,7 +251,7 @@ export default function OrgSettingsView() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="info@coop.org.np"
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function OrgSettingsView() {
         {/* Card 4: Logo & Demo Watermark */}
         <div className="rounded-3xl bg-white p-6 shadow-sm border border-slate-200/80 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-teal-700" /> 4. Emblem &amp; Sample Data Flag
+            <Building2 className="h-4 w-4 text-[#145C45]" /> 4. Emblem &amp; Sample Data Flag
           </h3>
 
           <div className="grid gap-4 sm:grid-cols-2 items-center">
@@ -280,7 +280,7 @@ export default function OrgSettingsView() {
                     onClick={() => setForm({ ...form, logoPreset: item.id as any })}
                     className={`flex-1 rounded-2xl border p-3 text-center transition cursor-pointer text-xs font-bold ${
                       form.logoPreset === item.id
-                        ? "border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-500/20"
+                        ? "border-[#145C45]/40 bg-[#DDF3E7] text-[#145C45] ring-2 ring-[#145C45]/20"
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                     }`}
                   >
@@ -296,7 +296,7 @@ export default function OrgSettingsView() {
                   type="checkbox"
                   checked={form.isSample}
                   onChange={(e) => setForm({ ...form, isSample: e.target.checked })}
-                  className="h-4 w-4 rounded accent-teal-600"
+                  className="h-4 w-4 rounded accent-[#145C45]"
                 />
                 <div>
                   <p className="text-xs font-bold text-slate-800">
@@ -315,7 +315,7 @@ export default function OrgSettingsView() {
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="submit"
-            className="flex items-center gap-2 rounded-2xl bg-teal-600 hover:bg-teal-700 active:scale-[0.98] text-white font-extrabold px-6 py-3 text-sm shadow-md shadow-teal-700/20 transition cursor-pointer"
+            className="flex items-center gap-2 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] active:scale-[0.98] text-white font-extrabold px-6 py-3 text-sm shadow-md shadow-[#145C45]/20 transition cursor-pointer"
           >
             <Save className="h-4 w-4" /> Save Organization Settings
           </button>

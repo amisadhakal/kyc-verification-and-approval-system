@@ -61,12 +61,12 @@ export default function OfflineEntry() {
         <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">
           The manually recorded KYC for{" "}
           <span className="font-bold text-slate-900">{form.memberName}</span> has been saved in the database
-          and placed into the <span className="font-bold text-blue-900">Pending Review</span> queue.
+          and placed into the <span className="font-bold text-[#145C45]">Pending Review</span> queue.
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => navigate(`/admin/submissions/${doneId}`)}
-            className="flex-1 rounded-2xl bg-blue-700 hover:bg-blue-800 py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-blue-700/20 transition"
+            className="flex-1 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-[#145C45]/20 transition"
           >
             Review Submission
           </button>
@@ -95,9 +95,9 @@ export default function OfflineEntry() {
         <button
           type="button"
           onClick={handleFillDemo}
-          className="flex items-center gap-1 rounded-full bg-teal-50 border border-teal-200 px-3 py-1.5 text-xs font-bold text-teal-900 hover:bg-teal-100 transition cursor-pointer"
+          className="flex items-center gap-1 rounded-full bg-[#DDF3E7] border border-[#145C45]/30 px-3 py-1.5 text-xs font-bold text-[#145C45] hover:bg-[#DDF3E7]/70 transition cursor-pointer"
         >
-          <Sparkles className="h-3.5 w-3.5 text-teal-700" /> Auto-fill Sample
+          <Sparkles className="h-3.5 w-3.5 text-[#145C45]" /> Auto-fill Sample
         </button>
       </div>
 
@@ -112,7 +112,7 @@ export default function OfflineEntry() {
               value={form.memberName}
               onChange={(e) => setForm({ ...form, memberName: e.target.value })}
               placeholder="e.g. Ram Bahadur"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
             />
           </Field>
           <Field label="Mobile Phone Number" required>
@@ -132,7 +132,7 @@ export default function OfflineEntry() {
               value={form.membershipCode}
               onChange={(e) => setForm({ ...form, membershipCode: e.target.value })}
               placeholder="e.g. MEM008 (or auto)"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-xs sm:text-sm outline-none transition focus:border-[#145C45] focus:ring-2 focus:ring-[#DDF3E7]"
             />
           </Field>
           <Field label="Identity Document Type">
@@ -212,7 +212,7 @@ export default function OfflineEntry() {
         <button
           type="submit"
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-teal-700 hover:bg-teal-800 active:scale-[0.98] py-3.5 text-sm font-bold text-white shadow-md shadow-teal-900/20 transition disabled:opacity-60 cursor-pointer"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] active:scale-[0.98] py-3.5 text-sm font-bold text-white shadow-md shadow-[#145C45]/20 transition disabled:opacity-60 cursor-pointer"
         >
           {busy ? (
             <Loader2 className="h-4 w-4 animate-spin" />

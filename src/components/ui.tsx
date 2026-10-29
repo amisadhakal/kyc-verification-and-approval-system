@@ -186,7 +186,7 @@ export function Avatar({
     (parts[0]?.[0] ?? "?").toUpperCase() + (parts[1]?.[0] ?? "").toUpperCase();
   return (
     <div
-      className={`${sizes} shrink-0 rounded-2xl bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 flex items-center justify-center font-extrabold text-white shadow-sm ring-1 ring-white/20`}
+      className={`${sizes} shrink-0 rounded-2xl bg-gradient-to-br from-[#145C45] via-[#1a7357] to-[#0f4534] flex items-center justify-center font-extrabold text-white shadow-sm ring-1 ring-white/20`}
     >
       {initial}
     </div>

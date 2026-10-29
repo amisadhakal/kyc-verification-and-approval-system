@@ -127,7 +127,7 @@ export default function Dashboard() {
       )}
 
       {/* KPI Stats Grid */}
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
         {cards.map((c) => {
           const Icon = c.icon;
           return (
@@ -147,12 +147,12 @@ export default function Dashboard() {
 
       {/* Filter Tabs & Submissions List */}
       <div className="space-y-3">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 pb-1">
           {FILTERS.map((f) => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 cursor-pointer ${
+              className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap justify-center transition active:scale-95 cursor-pointer ${
                 filter === f.key
                   ? "bg-[#145C45] text-white shadow-sm"
                   : "bg-white text-slate-600 border border-slate-200 hover:bg-[#DDF3E7] hover:text-[#145C45] hover:border-[#145C45]/30"

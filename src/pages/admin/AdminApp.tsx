@@ -56,7 +56,7 @@ export default function AdminApp({
                 <ArrowLeft className="h-5 w-5" />
               </button>
             ) : (
-              <CoopLogo settings={org} className="h-10 w-10 sm:h-11 sm:w-11" />
+              <CoopLogo settings={org} showStatusDot={false} className="h-10 w-10 sm:h-11 sm:w-11" />
             )}
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -95,7 +95,7 @@ export default function AdminApp({
         {/* ── Tab Navigation ──────────────────────────────────────────── */}
         {!isDetail && (
           <nav className="mx-auto max-w-5xl px-4 pb-2.5">
-            <div className="no-scrollbar flex gap-2 overflow-x-auto pt-1">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const active = section === t.key;
@@ -107,7 +107,7 @@ export default function AdminApp({
                         t.key === "dashboard" ? "/admin" : `/admin/${t.key}`
                       )
                     }
-                    className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition active:scale-95 sm:text-sm cursor-pointer ${
+                    className={`flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition active:scale-95 sm:text-sm cursor-pointer ${
                       active
                         ? "bg-[#DDF3E7] text-[#145C45] shadow-md font-extrabold"
                         : "bg-white/10 text-[#DDF3E7] hover:bg-white/20 hover:text-white"
@@ -124,7 +124,7 @@ export default function AdminApp({
       </header>
 
       {/* ── Main Content ──────────────────────────────────────────────── */}
-      <main className="mx-auto max-w-5xl px-3 py-5 sm:px-4">
+      <main className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
         {isDetail ? (
           <SubmissionDetail id={id ?? ""} />
         ) : section === "dashboard" ? (
