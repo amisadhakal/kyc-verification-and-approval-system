@@ -101,11 +101,10 @@ export default function AdminApp({
                         t.key === "dashboard" ? "/admin" : `/admin/${t.key}`
                       )
                     }
-                    className={`flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition active:scale-95 sm:text-sm cursor-pointer ${
-                      active
+                    className={`flex items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition active:scale-95 sm:text-sm cursor-pointer ${active
                         ? "bg-[#DDF3E7] text-[#145C45] shadow-md font-extrabold"
                         : "bg-white/10 text-[#DDF3E7] hover:bg-white/20 hover:text-white"
-                    }`}
+                      }`}
                   >
                     <Icon className="h-4 w-4" />
                     {t.label}

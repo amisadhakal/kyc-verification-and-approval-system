@@ -186,6 +186,39 @@ export function seedState(): AppState {
       invitedAt: now - 15 * DAY,
       status: "rejected",
     },
+    {
+      id: "mem_arjun",
+      name: "Arjun Bhandari",
+      phone: "9867654322",
+      membershipCode: "MEM006",
+      inviteCode: "KYC2T8P",
+      otp: "446677",
+      otpExpiresAt: now + 45 * 60 * 1000,
+      invitedAt: now - 1 * DAY,
+      status: "invited",
+    },
+    {
+      id: "mem_kamal",
+      name: "Kamal Pandey",
+      phone: "9867654323",
+      membershipCode: "MEM007",
+      inviteCode: "KYC6T4R",
+      otp: "887766",
+      otpExpiresAt: now + 25 * 60 * 1000,
+      invitedAt: now - 2 * DAY,
+      status: "pending",
+    },
+    {
+      id: "mem_reshma",
+      name: "Reshma Khatri",
+      phone: "9867654324",
+      membershipCode: "MEM008",
+      inviteCode: "KYC9W7Q",
+      otp: "554433",
+      otpExpiresAt: now + 10 * 60 * 1000,
+      invitedAt: now - 6 * 60 * 1000,
+      status: "approved",
+    },
   ];
 
   const submissions: KycSubmission[] = [
@@ -275,6 +308,49 @@ export function seedState(): AppState {
       reviewedBy: "Manager · Suresh",
       remark: "Address on citizenship proof does not match permanent address provided",
     },
+    {
+      id: "sub_kamal",
+      memberId: "mem_kamal",
+      memberName: "Kamal Pandey",
+      phone: "9867654323",
+      membershipCode: "MEM007",
+      email: "kamal@email.com",
+      clientType: "Individual",
+      memberBranch: "Head Office - Kathmandu",
+      country: "Nepal",
+      state: "Bagmati Province",
+      district: "Kathmandu",
+      municipality: "Kathmandu Metropolitan City",
+      wardNo: "22",
+      streetTole: "Bishnu Temple Road",
+      address: "Ward 22, Bishnu Temple Road, Kathmandu Metropolitan City, Kathmandu, Bagmati Province, Nepal",
+      idDocType: "Citizenship",
+      status: "pending",
+      submittedAt: now - 4 * 60 * 1000,
+    },
+    {
+      id: "sub_reshma",
+      memberId: "mem_reshma",
+      memberName: "Reshma Khatri",
+      phone: "9867654324",
+      membershipCode: "MEM008",
+      email: "reshma@email.com",
+      clientType: "Individual",
+      memberBranch: "Biratnagar Branch",
+      country: "Nepal",
+      state: "Koshi Province",
+      district: "Morang",
+      municipality: "Biratnagar Metropolitan City",
+      wardNo: "15",
+      streetTole: "Green View Lane",
+      address: "Ward 15, Green View Lane, Biratnagar Metropolitan City, Morang, Koshi Province, Nepal",
+      idDocType: "PAN Card",
+      status: "approved",
+      submittedAt: now - 3 * DAY,
+      reviewedAt: now - 2 * DAY,
+      reviewedBy: "Manager · Suresh",
+      remark: "All credentials and documents verified successfully",
+    },
   ];
 
   return { members, submissions, orgSettings: DEFAULT_ORG_SETTINGS };
@@ -354,7 +430,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           m.id === memberId
             ? {
                 ...m,
-                otp: m.id === "mem_ram" ? "123456" : generateOtp(),
+                otp: m.otp,
                 otpExpiresAt: Date.now() + 30 * 60 * 1000,
               }
             : m
@@ -365,7 +441,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const sendMemberSms = (memberId: string): SmsInviteData | null => {
       const member = state.members.find((m) => m.id === memberId);
       if (!member) return null;
-      const otp = member.id === "mem_ram" ? "123456" : member.otp || generateOtp();
+      const otp = member.otp || generateOtp();
       const inviteCode = member.inviteCode;
 
       setState((s) => ({
