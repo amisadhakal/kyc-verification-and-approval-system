@@ -5,10 +5,12 @@ export function CoopLogo({
   settings,
   className = "h-11 w-11",
   iconClassName = "h-6 w-6",
+  showStatusDot = true,
 }: {
   settings?: OrgSettings;
   className?: string;
   iconClassName?: string;
+  showStatusDot?: boolean;
 }) {
   const preset = settings?.logoPreset || "emblem";
 
@@ -36,7 +38,9 @@ export function CoopLogo({
       ) : (
         <Landmark className={iconClassName} />
       )}
-      <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-amber-400 ring-2 ring-teal-950" />
+      {showStatusDot && (
+        <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-amber-400 ring-2 ring-teal-950" />
+      )}
     </div>
   );
 }

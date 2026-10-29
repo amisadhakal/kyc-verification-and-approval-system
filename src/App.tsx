@@ -2,19 +2,12 @@ import { useState, type ReactNode } from "react";
 import {
   AlertCircle,
   ArrowRight,
-  Building2,
-  CheckCircle2,
   ChevronRight,
-  Info,
   KeyRound,
   Loader2,
-  Lock,
-  LogIn,
   MapPin,
   ShieldCheck,
   Smartphone,
-  Sparkles,
-  Ticket,
   X,
 } from "lucide-react";
 import { StoreProvider, useStore } from "./lib/store";
@@ -71,13 +64,8 @@ function LandingPage() {
     }, 320);
   };
 
-  const handleQuickDemoFill = (sampleCode: string) => {
-    setCode(sampleCode);
-    setError("");
-  };
-
   return (
-    <div className="relative min-h-dvh flex flex-col items-center justify-between bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 selection:bg-[#DDF3E7] selection:text-[#145C45] overflow-x-hidden">
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 selection:bg-[#DDF3E7] selection:text-[#145C45] overflow-x-hidden">
       {/* ── Background Subtle Decorative Elements (Restrained) ───────── */}
       <div
         aria-hidden="true"
@@ -119,13 +107,16 @@ function LandingPage() {
         className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-[#DDF3E7]/10 blur-3xl"
       />
 
-      {/* ── Header: Cooperative Identity & Branding ─────────────────── */}
-      <header className="relative z-10 w-full max-w-xl text-center mb-6 sm:mb-8 animate-fade-down">
+      {/* ── Single centered white card: branding, form & actions ─────── */}
+      <div className="relative z-10 w-full max-w-md my-auto rounded-3xl bg-white p-8 shadow-2xl border border-slate-200/70 animate-fade-up">
+        {/* ── Header: Cooperative Identity & Branding ─────────────────── */}
+        <header className="relative z-10 w-full text-center mb-6 sm:mb-8 animate-fade-down">
         {/* Logo Container */}
         <div className="mx-auto mb-3 flex items-center justify-center">
-          <div className="rounded-2xl p-1 bg-white/10 backdrop-blur-md ring-2 ring-white/20 shadow-2xl">
+          <div className="rounded-2xl p-1 bg-[#DDF3E7]/60 ring-2 ring-[#145C45]/20 shadow-2xl">
             <CoopLogo
               settings={org}
+              showStatusDot={false}
               className="h-16 w-16 sm:h-20 sm:w-20 shadow-inner"
               iconClassName="h-9 w-9 sm:h-11 sm:w-11"
             />
@@ -133,40 +124,33 @@ function LandingPage() {
         </div>
 
         {/* Nepali Name */}
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight text-balance">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight text-balance">
           {org.nameNepali}
         </h1>
 
         {/* English Name */}
-        <p className="mt-1 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#DDF3E7]">
+        <p className="mt-1 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#145C45]">
           {org.nameEnglish}
         </p>
 
         {/* Address and Registration Badges */}
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-[#DDF3E7]/85 font-medium">
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-600 font-medium">
           <span className="inline-flex items-center gap-1">
-            <MapPin className="h-3.5 w-3.5 text-[#DDF3E7]" />
+            <MapPin className="h-3.5 w-3.5 text-[#145C45]/80" />
             {org.addressNepali || org.addressEnglish}
           </span>
           {org.regNo && (
-            <span className="hidden sm:inline-block text-[#DDF3E7]/60">
+            <span className="hidden sm:inline-block text-slate-400">
               &middot; {org.regNo}
             </span>
           )}
         </div>
 
-        {/* Demo Indicator (Clearly Labeled, Non-Invented) */}
-        {org.isSample && (
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1 text-[11px] font-semibold text-amber-200 backdrop-blur-sm">
-            <Sparkles className="h-3.5 w-3.5 text-amber-300 shrink-0" />
-            <span>नमूना प्रदर्शन प्रणाली · Demo Environment (Configurable)</span>
-          </div>
-        )}
       </header>
 
       {/* ── Center: Member Login Card ───────────────────────────────── */}
-      <main className="relative z-10 w-full max-w-md my-auto animate-fade-up">
-        <div className="rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-white/20 transition-all">
+      <main className="relative z-10 w-full animate-fade-up">
+        <div>
           {/* Card Header */}
           <div className="mb-6 flex items-start gap-3.5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#145C45] text-white shadow-md shadow-[#145C45]/20">
@@ -302,62 +286,18 @@ function LandingPage() {
           </button>
         </div>
 
-        {/* ── Demo Information & Evaluation Sandbox ─────────────────── */}
-        {/* Intentional, clearly segregated testing helper for supervisors & evaluators */}
-        <section
-          aria-label="Demonstration Notice"
-          className="mt-4 rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md text-white/90 shadow-md"
-        >
-          <div className="flex items-start gap-2.5">
-            <Info className="h-4 w-4 text-[#DDF3E7] shrink-0 mt-0.5" />
-            <div className="text-xs space-y-1.5 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-[#DDF3E7]">
-                  प्रणाली मूल्याङ्कन (Prototype Sandbox)
-                </span>
-                <span className="rounded bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-amber-200">
-                  TEST MODE
-                </span>
-              </div>
-              <p className="text-[11px] text-white/80 leading-relaxed">
-                In this demo, SMS invitations and OTPs are generated inside the{" "}
-                <button
-                  type="button"
-                  onClick={() => navigate("/manager-login")}
-                  className="font-bold text-white underline underline-offset-2 hover:text-amber-200 cursor-pointer"
-                >
-                  Manager Portal
-                </button>
-                . For quick evaluation with sample member{" "}
-                <strong className="text-white">Ram Sharma</strong>:
-              </p>
-              <div className="flex items-center gap-2 pt-0.5">
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoFill("ABC123")}
-                  className="inline-flex items-center gap-1 rounded-lg bg-white/15 hover:bg-white/25 active:scale-95 px-2.5 py-1 text-[11px] font-bold text-amber-200 transition cursor-pointer"
-                >
-                  <Ticket className="h-3 w-3" />
-                  Auto-fill Sample Code: ABC123
-                </button>
-                <span className="text-[10px] text-white/60">
-                  (OTP is delivered via SMS simulator)
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* ── Footer: Copyright & System Note ──────────────────────────── */}
-      <footer className="relative z-10 w-full max-w-xl text-center mt-6 pt-4 border-t border-white/10 text-[11px] text-[#DDF3E7]/70 space-y-1">
+      <footer className="relative z-10 w-full text-center mt-6 pt-4 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
         <p>
           &copy; {new Date().getFullYear()} {org.nameNepali} &middot; {org.nameEnglish}
         </p>
-        <p className="text-[10px] text-white/50">
+        <p className="text-[10px] text-slate-400">
           Cooperative KYC Verification &amp; KYM Approval Management System (Nepal)
         </p>
       </footer>
+      </div>
     </div>
   );
 }
