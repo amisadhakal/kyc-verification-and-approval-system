@@ -61,6 +61,7 @@ export interface Member {
   otpExpiresAt: number;
   invitedAt: number;
   status: KycStatus;
+  isDemo?: boolean;
 }
 
 export interface KycSubmission {

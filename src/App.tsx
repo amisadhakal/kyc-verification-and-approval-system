@@ -30,8 +30,10 @@ function LandingPage() {
   const { t } = useI18n();
   const org = state.orgSettings;
   const [code, setCode] = useState("");
+  const [selectedDemoId, setSelectedDemoId] = useState("");
   const [error, setError] = useState("");
   const [isValidating, setIsValidating] = useState(false);
+  const demoMembers = state.members.filter((member) => member.isDemo);
 
   // Landing page renders as a full-screen single page → remove page scrollbar
   useEffect(() => {
@@ -210,6 +212,7 @@ function LandingPage() {
                   disabled={isValidating}
                   onChange={(e) => {
                     setCode(e.target.value.toUpperCase());
+                    setSelectedDemoId("");
                     if (error) setError("");
                   }}
                   placeholder="e.g. ABC123"
@@ -263,6 +266,57 @@ function LandingPage() {
               )}
             </button>
           </form>
+
+          <section className="mt-5 border-t border-slate-200 pt-4">
+            <div className="mb-3">
+              <h3 className="text-xs font-extrabold uppercase tracking-wide text-slate-700">
+                Try a demo member
+              </h3>
+              <p className="mt-1 text-[11px] text-slate-500">
+                Select an available member to fill their code. Use the displayed OTP on the next screen.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {demoMembers.map((member) => {
+                const available = member.status === "invited";
+                const selected = selectedDemoId === member.id;
+                return (
+                  <button
+                    key={member.id}
+                    type="button"
+                    disabled={!available}
+                    onClick={() => {
+                      setCode(member.membershipCode);
+                      setSelectedDemoId(member.id);
+                      setError("");
+                    }}
+                    className={`rounded-xl border p-2.5 text-left transition ${
+                      selected
+                        ? "border-[#145C45] bg-[#DDF3E7]/70 ring-2 ring-[#145C45]/15"
+                        : available
+                        ? "border-slate-200 bg-slate-50 hover:border-[#145C45]/50 hover:bg-[#DDF3E7]/40"
+                        : "cursor-not-allowed border-slate-200 bg-slate-100 opacity-60"
+                    }`}
+                  >
+                    <span className="block truncate text-xs font-bold text-slate-800">
+                      {member.name}
+                    </span>
+                    <span className="mt-1 block font-mono text-[11px] font-bold text-[#145C45]">
+                      Member: {member.membershipCode.toLowerCase()}
+                    </span>
+                    <span className="block font-mono text-[11px] text-slate-600">
+                      OTP: {member.otp}
+                    </span>
+                    {!available && (
+                      <span className="mt-1 block text-[10px] font-semibold capitalize text-slate-500">
+                        {member.status}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
 
           {/* Clean Divider */}
           <div className="relative my-5">

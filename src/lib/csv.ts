@@ -60,12 +60,3 @@ export function parseCsv(text: string): { rows: CsvRow[]; errors: string[] } {
   if (rows.length === 0) errors.push("No valid data rows found.");
   return { rows, errors };
 }
-
-export function downloadSampleCsv(): string {
-  return [
-    "Name,Phone Number,Membership Code",
-    "Ramesh Kumar,919800011122,Mem006",
-    "Kamla Bai,919800022233,Mem007",
-    "Dinesh Yadav,919800033344,Mem008",
-  ].join("\n");
-}

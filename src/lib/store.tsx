@@ -12,6 +12,69 @@ import { DEFAULT_ORG_SETTINGS } from "./types";
 const STORAGE_KEY = "coop-kyc-state-v5";
 const DAY = 24 * 60 * 60 * 1000;
 
+const DEMO_MEMBERS: Omit<Member, "otpExpiresAt" | "invitedAt">[] = [
+  {
+    id: "demo_aarya",
+    name: "Aarya Shrestha",
+    phone: "9800000101",
+    membershipCode: "AD236",
+    inviteCode: "DEMOA1",
+    otp: "236814",
+    status: "invited",
+    isDemo: true,
+  },
+  {
+    id: "demo_bikash",
+    name: "Bikash Rai",
+    phone: "9800000102",
+    membershipCode: "BR517",
+    inviteCode: "DEMOB2",
+    otp: "517203",
+    status: "invited",
+    isDemo: true,
+  },
+  {
+    id: "demo_chandra",
+    name: "Chandra Gurung",
+    phone: "9800000103",
+    membershipCode: "CG804",
+    inviteCode: "DEMOC3",
+    otp: "804126",
+    status: "invited",
+    isDemo: true,
+  },
+  {
+    id: "demo_deepa",
+    name: "Deepa Karki",
+    phone: "9800000104",
+    membershipCode: "DK392",
+    inviteCode: "DEMOD4",
+    otp: "392615",
+    status: "invited",
+    isDemo: true,
+  },
+  {
+    id: "demo_eshan",
+    name: "Eshan Thapa",
+    phone: "9800000105",
+    membershipCode: "ET648",
+    inviteCode: "DEMOE5",
+    otp: "648317",
+    status: "invited",
+    isDemo: true,
+  },
+  {
+    id: "demo_farida",
+    name: "Farida Ansari",
+    phone: "9800000106",
+    membershipCode: "FA731",
+    inviteCode: "DEMOF6",
+    otp: "731952",
+    status: "invited",
+    isDemo: true,
+  },
+];
+
 export interface AppState {
   members: Member[];
   submissions: KycSubmission[];
@@ -219,6 +282,11 @@ export function seedState(): AppState {
       invitedAt: now - 6 * 60 * 1000,
       status: "approved",
     },
+    ...DEMO_MEMBERS.map((member) => ({
+      ...member,
+      otpExpiresAt: now + 365 * DAY,
+      invitedAt: now,
+    })),
   ];
 
   const submissions: KycSubmission[] = [
@@ -362,8 +430,18 @@ function loadState(): AppState {
     if (raw) {
       const parsed = JSON.parse(raw) as AppState;
       if (Array.isArray(parsed.members) && Array.isArray(parsed.submissions)) {
+        const existingIds = new Set(parsed.members.map((member) => member.id));
+        const now = Date.now();
+        const demoMembers = DEMO_MEMBERS
+          .filter((member) => !existingIds.has(member.id))
+          .map((member) => ({
+            ...member,
+            otpExpiresAt: now + 365 * DAY,
+            invitedAt: now,
+          }));
         return {
           ...parsed,
+          members: [...parsed.members, ...demoMembers],
           orgSettings: parsed.orgSettings
             ? { ...DEFAULT_ORG_SETTINGS, ...parsed.orgSettings }
             : DEFAULT_ORG_SETTINGS,
