@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -35,13 +35,6 @@ function LandingPage() {
   const [isValidating, setIsValidating] = useState(false);
   const demoMembers = state.members.filter((member) => member.isDemo);
 
-  // Landing page renders as a full-screen single page → remove page scrollbar
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add("no-page-scroll");
-    return () => root.classList.remove("no-page-scroll");
-  }, []);
-
   const handleOpen = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = code.trim().toUpperCase();
@@ -75,7 +68,7 @@ function LandingPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 selection:bg-[#DDF3E7] selection:text-[#145C45] overflow-x-hidden">
+    <div className="relative flex min-h-dvh w-full flex-col items-center justify-start overflow-x-clip bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] px-3 pb-6 pt-16 text-slate-900 selection:bg-[#DDF3E7] selection:text-[#145C45] sm:px-6 sm:py-12 lg:px-8">
       {/* Language toggle (English / नेपाली) */}
       <div className="absolute top-4 right-4 z-20">
         <LanguageToggle />
@@ -122,7 +115,7 @@ function LandingPage() {
       />
 
       {/* ── Single centered white card: branding, form & actions ─────── */}
-      <div className="relative z-10 w-full max-w-md my-auto rounded-3xl bg-white p-8 shadow-2xl border border-slate-200/70 animate-fade-up">
+      <div className="relative z-10 my-0 w-full max-w-md rounded-3xl border border-slate-200/70 bg-white p-5 shadow-2xl animate-fade-up sm:my-auto sm:p-8">
         {/* ── Header: Cooperative Identity & Branding ─────────────────── */}
         <header className="relative z-10 w-full text-center mb-6 sm:mb-8 animate-fade-down">
         {/* Logo Container */}

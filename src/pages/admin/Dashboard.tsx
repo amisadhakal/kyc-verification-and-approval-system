@@ -11,14 +11,14 @@ import {
   XCircle,
 } from "lucide-react";
 import { useStore } from "../../lib/store";
-import { useI18n } from "../../lib/i18n";
+import { useI18n, type TranslationKey } from "../../lib/i18n";
 import { navigate } from "../../lib/router";
 import { formatDateTime, timeAgo } from "../../lib/utils";
 import { Avatar, StatusPill } from "../../components/ui";
 import { RejectModal } from "./SubmissionDetail";
 import type { KycSubmission, KycStatus } from "../../lib/types";
 
-const FILTERS: { key: string; labelKey: string }[] = [
+const FILTERS: { key: string; labelKey: TranslationKey }[] = [
   { key: "all", labelKey: "allSubmissions" },
   { key: "pending", labelKey: "statusPending" },
   { key: "approved", labelKey: "statusApproved" },
@@ -54,7 +54,7 @@ export default function Dashboard() {
     return list;
   }, [state.submissions, filter]);
 
-  const cards = [
+  const cards: { labelKey: TranslationKey; value: number; icon: typeof Clock; cls: string }[] = [
     {
       labelKey: "statusPending",
       value: stats.pending,
@@ -188,6 +188,7 @@ export default function Dashboard() {
 
 function SubmissionCard({ sub }: { sub: KycSubmission }) {
   const { approveSubmission, rejectSubmission } = useStore();
+  const { t } = useI18n();
   const [rejectOpen, setRejectOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 

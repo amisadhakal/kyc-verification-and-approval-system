@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import {
   AlertCircle,
   Eye,
@@ -29,13 +29,6 @@ export default function ManagerLogin() {
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Manager login renders as a full-screen single page → remove page scrollbar
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add("no-page-scroll");
-    return () => root.classList.remove("no-page-scroll");
-  }, []);
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isProcessing) return;
@@ -64,7 +57,7 @@ export default function ManagerLogin() {
   };
 
   return (
-    <div className="relative min-h-dvh flex items-center justify-center bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 overflow-x-hidden">
+    <div className="relative flex min-h-dvh w-full flex-col items-center justify-start overflow-x-clip bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] px-3 pb-6 pt-16 text-slate-900 sm:px-6 sm:py-12 lg:px-8">
       {/* Language toggle (English / नेपाली) */}
       <div className="absolute top-4 right-4 z-20">
         <LanguageToggle />
@@ -80,7 +73,7 @@ export default function ManagerLogin() {
       />
 
       {/* ── Login Card ─────────────────────────────────────────────────── */}
-      <div className="relative z-10 w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-slate-200/70 animate-fade-up">
+      <div className="relative z-10 my-0 w-full max-w-md rounded-3xl border border-slate-200/70 bg-white p-5 shadow-2xl animate-fade-up sm:my-auto sm:p-8">
         {/* Card Header: Cooperative Identity */}
         <div className="mb-6 flex flex-col items-center text-center">
           <div className="mx-auto mb-3 flex items-center justify-center rounded-2xl p-1 bg-white/10 backdrop-blur-md ring-2 ring-white/20 shadow-2xl">
