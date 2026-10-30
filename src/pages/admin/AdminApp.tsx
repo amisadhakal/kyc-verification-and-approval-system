@@ -8,6 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { useStore } from "../../lib/store";
+import { useI18n } from "../../lib/i18n";
 import { navigate } from "../../lib/router";
 import { endManagerDemoSession } from "../../lib/auth";
 import Dashboard from "./Dashboard";
@@ -16,6 +17,7 @@ import OfflineEntry from "./OfflineEntry";
 import SubmissionDetail from "./SubmissionDetail";
 import OrgSettingsView from "./OrgSettingsView";
 import { CoopLogo } from "../../components/CoopLogo";
+import LanguageToggle from "../../components/LanguageToggle";
 
 const TABS = [
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -32,6 +34,7 @@ export default function AdminApp({
   id?: string;
 }) {
   const { state } = useStore();
+  const { t } = useI18n();
   const isDetail = section === "submissions";
   const org = state.orgSettings;
 
@@ -73,15 +76,16 @@ export default function AdminApp({
             </div>
           </div>
 
-          {/* Right: logout */}
+          {/* Right: language toggle + logout */}
           <div className="shrink-0 flex items-center gap-2">
+            <LanguageToggle />
             <button
               onClick={handleLogout}
               className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/20 px-3 py-1.5 text-xs font-bold text-[#DDF3E7] hover:bg-white/20 hover:text-white active:scale-95 transition cursor-pointer"
               aria-label="Logout from manager portal"
             >
               <LogOut className="h-3.5 w-3.5" />
-              <span>Logout</span>
+              <span>{t("logout")}</span>
             </button>
           </div>
         </div>

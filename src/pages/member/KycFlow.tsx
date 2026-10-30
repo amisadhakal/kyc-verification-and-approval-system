@@ -36,12 +36,13 @@ import {
   X,
 } from "lucide-react";
 import { useStore } from "../../lib/store";
+import { useI18n, type TranslationKey } from "../../lib/i18n";
 import { navigate } from "../../lib/router";
 import { formatDateTime } from "../../lib/utils";
-import { STATUS_LABEL } from "../../lib/types";
 import { StatusPill } from "../../components/ui";
 import { fileToDataUrl } from "../../lib/image";
 import { CoopLogo } from "../../components/CoopLogo";
+import LanguageToggle from "../../components/LanguageToggle";
 import {
   CLIENT_TYPES,
   COUNTRIES,
@@ -79,10 +80,10 @@ const emptyDoc = (): Doc => ({ dataUrl: "", name: "" });
 
 // ─── Wizard step metadata (matches segments 1, 2, 5, 6) ─────────────────────
 const WIZARD_STEPS = [
-  { id: "general",   label: "General Details",   num: 1 },
-  { id: "address",   label: "Address Details",   num: 2 },
-  { id: "documents", label: "Documents Upload",  num: 3 },
-  { id: "agreement", label: "User Agreement",    num: 4 },
+  { id: "general",   labelKey: "stepGeneral",   num: 1 },
+  { id: "address",   labelKey: "stepAddress",   num: 2 },
+  { id: "documents", labelKey: "stepDocuments", num: 3 },
+  { id: "agreement", labelKey: "stepAgreement", num: 4 },
 ] as const;
 
 type WizardStep = typeof WIZARD_STEPS[number]["id"];
@@ -108,6 +109,7 @@ const AGREEMENT_ITEMS = [
 
 // ─── Helper: Progress Stepper ────────────────────────────────────────────────
 function StepProgress({ current }: { current: WizardStep }) {
+  const { t } = useI18n();
   const currentIdx = WIZARD_STEPS.findIndex((s) => s.id === current);
   return (
     <div className="border-b border-slate-200 bg-white py-3 px-4 overflow-x-auto no-scrollbar">
@@ -134,7 +136,7 @@ function StepProgress({ current }: { current: WizardStep }) {
                     active ? "text-[#145C45] font-extrabold" : done ? "text-emerald-600" : "text-slate-400"
                   }`}
                 >
-                  {step.label}
+                  {t(step.labelKey)}
                 </span>
               </div>
               {i < WIZARD_STEPS.length - 1 && (
@@ -278,6 +280,7 @@ function LivePreview({
   memberPhone: string;
   rows: { label: string; value: string }[];
 }) {
+  const { t } = useI18n();
   const hasData = rows.some((r) => r.value);
   return (
     <div className="hidden lg:block w-64 shrink-0">
@@ -285,7 +288,7 @@ function LivePreview({
         {/* Header */}
         <div className="bg-[#145C45] px-4 py-3 flex items-center gap-2">
           <Eye className="h-4 w-4 text-[#DDF3E7] shrink-0" />
-          <span className="text-xs font-bold text-white">Live Preview</span>
+          <span className="text-xs font-bold text-white">{t("livePreview")}</span>
         </div>
         {/* Member identity (always shown) */}
         <div className="px-4 py-3 bg-[#DDF3E7]/40 border-b border-[#DDF3E7]">
@@ -306,7 +309,7 @@ function LivePreview({
             rows.map((r) => <PreviewRow key={r.label} label={r.label} value={r.value} />)
           ) : (
             <p className="py-4 text-center text-[11px] text-slate-400">
-              Fill in the form to see your data here
+              {t("fillFormToSeeData")}
             </p>
           )}
         </div>
@@ -330,6 +333,7 @@ function BottomBar({
   onCancel: () => void;
   onSubmit?: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="fixed bottom-0 inset-x-0 z-20 flex items-center justify-end gap-3 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur no-print">
       <button
@@ -337,7 +341,7 @@ function BottomBar({
         onClick={onCancel}
         className="rounded border border-red-400 bg-white px-4 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50"
       >
-        Cancel application
+        {t("cancelApplication")}
       </button>
       {onSubmit && (
         <button
@@ -345,7 +349,7 @@ function BottomBar({
           onClick={onSubmit}
           className="rounded bg-[#059669] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
         >
-          Submit application
+          {t("submitApplication")}
         </button>
       )}
     </div>
@@ -369,6 +373,7 @@ function WizardShell({
   onSubmitBtn?: () => void;
 }) {
   const { state } = useStore();
+  const { t } = useI18n();
   const org = state.orgSettings;
 
   return (
@@ -393,6 +398,9 @@ function WizardShell({
               {org.nameEnglish} &middot; <span className="text-white/80">{memberName}</span>
             </p>
           </div>
+          <div className="ml-auto shrink-0">
+            <LanguageToggle />
+          </div>
         </div>
       </div>
 
@@ -416,6 +424,7 @@ function WizardShell({
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function KycFlow({ code }: { code: string }) {
   const { state, findByInviteCode, submitKyc, resendInvite } = useStore();
+  const { t } = useI18n();
   const org = state.orgSettings;
   const member = useMemo(() => findByInviteCode(code), [state.members, code]);
 
@@ -658,16 +667,16 @@ export default function KycFlow({ code }: { code: string }) {
           <X className="h-10 w-10 text-red-600" />
         </div>
         <div>
-          <h1 className="text-lg font-extrabold text-slate-900">Invite Link Not Found</h1>
+          <h1 className="text-lg font-extrabold text-slate-900">{t("invalidTitle")}</h1>
           <p className="mt-1 max-w-xs text-sm text-slate-500">
-            The code <span className="font-mono font-bold text-slate-800">"{code}"</span> was not found. Please use the exact link from your SMS.
+            {t("invalidBody", { code })}
           </p>
         </div>
         <button
           onClick={() => navigate("/")}
           className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
         >
-          ← Enter Code Manually
+          {t("enterCodeManually")}
         </button>
       </div>
     );
@@ -686,28 +695,27 @@ export default function KycFlow({ code }: { code: string }) {
           <CheckCircle2 className="h-14 w-14 text-emerald-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-black text-slate-900">KYC Submitted!</h1>
+          <h1 className="text-2xl font-black text-slate-900">{t("successTitle")}</h1>
           <p className="mt-2 max-w-sm text-sm text-slate-500">
-            Thank you, <span className="font-bold text-slate-800">{memberName}</span>. Your application and documents have been saved. Status is now{" "}
-            <span className="font-bold text-amber-700">Pending Review</span>.
+            {t("successThankYou", { name: memberName })}
           </p>
         </div>
         <div className="w-full max-w-xs rounded-2xl border border-[#DDF3E7] bg-white p-4 text-left text-xs shadow-sm">
           <dl className="space-y-2">
             <div className="flex justify-between">
-              <dt className="text-slate-400">Member Code</dt>
+              <dt className="text-slate-400">{t("successMemberCode")}</dt>
               <dd className="font-bold text-slate-800">{member.membershipCode}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-400">Email</dt>
+              <dt className="text-slate-400">{t("successEmail")}</dt>
               <dd className="font-bold text-slate-800">{general.email}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-400">Branch</dt>
+              <dt className="text-slate-400">{t("successBranch")}</dt>
               <dd className="font-bold text-slate-800">{general.memberBranch}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-400">Submitted At</dt>
+              <dt className="text-slate-400">{t("successSubmittedAt")}</dt>
               <dd className="font-bold text-slate-800">{formatDateTime(Date.now())}</dd>
             </div>
           </dl>
@@ -717,13 +725,13 @@ export default function KycFlow({ code }: { code: string }) {
             onClick={() => navigate("/admin")}
             className="w-full rounded-xl bg-[#145C45] py-3 text-sm font-bold text-white transition hover:bg-[#0f4534] cursor-pointer"
           >
-            Go to Manager Portal
+            {t("goToManagerPortal")}
           </button>
           <button
             onClick={() => setScreen("status")}
             className="w-full rounded-xl border border-slate-200 py-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 cursor-pointer"
           >
-            Track Application Status
+            {t("trackApplication")}
           </button>
         </div>
       </div>
@@ -735,15 +743,20 @@ export default function KycFlow({ code }: { code: string }) {
     const orgTag = org.shortName || org.nameEnglish || "Coop KYC";
 
     return (
-      <div className="min-h-dvh bg-[#F8FAFC] flex flex-col">
+      <div className="relative min-h-dvh bg-[#F8FAFC] flex flex-col">
+        {/* Language toggle (English / नेपाली) */}
+        <div className="absolute top-4 right-4 z-20">
+          <LanguageToggle />
+        </div>
+
         {/* Top green header strip */}
         <div className="bg-[#145C45] px-4 pt-10 pb-20 text-center text-white">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur mb-4 shadow-lg border border-white/20">
             <ShieldCheck className="h-9 w-9 text-white" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight">OTP Verification</h1>
+          <h1 className="text-2xl font-black tracking-tight">{t("otpTitle")}</h1>
           <p className="mt-2 text-sm text-[#DDF3E7] max-w-xs mx-auto">
-            Hi <span className="font-bold text-white">{member.name}</span>, we sent a 6-digit code to your phone.
+            {t("otpGreeting", { name: member.name })}
           </p>
           <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-1.5">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -757,15 +770,12 @@ export default function KycFlow({ code }: { code: string }) {
           <div className="bg-slate-50 border-b border-slate-200 px-5 pt-5 pb-4">
             <div className="flex items-center gap-2 text-[11px] font-bold text-[#145C45] mb-2">
               <MessageSquare className="h-3.5 w-3.5" />
-              <span>SMS received from {orgTag}</span>
+              <span>{t("smsReceivedFrom", { org: orgTag })}</span>
             </div>
             <div className="rounded-xl bg-white border border-slate-200 p-3.5 shadow-sm">
               <p className="text-xs text-slate-600 leading-relaxed">
-                Dear <span className="font-bold text-slate-900">{member.name}</span>, your KYC link:{" "}
-                <span className="font-mono font-bold text-slate-800">
-                  kyc.coop/{member.inviteCode.toLowerCase()}
-                </span>
-                {" "}— OTP:{" "}
+                {t("smsBody", { name: member.name, code: member.inviteCode.toLowerCase(), otp: member.otp }).split("— OTP:")[0]}
+                {" — OTP: "}
                 <button
                   type="button"
                   onClick={() => setOtp(member.otp.split(""))}
@@ -775,14 +785,14 @@ export default function KycFlow({ code }: { code: string }) {
                   {member.otp}
                 </button>
               </p>
-              <p className="mt-1.5 text-[10px] text-slate-400">Valid for 10 minutes. Do not share this OTP.</p>
+              <p className="mt-1.5 text-[10px] text-slate-400">{t("otpValid")}</p>
             </div>
           </div>
 
           {/* OTP entry section */}
           <div className="px-5 py-5">
             <label className="mb-3 block text-center text-xs font-bold uppercase tracking-widest text-slate-500">
-              Enter Verification Code
+              {t("enterOtp")}
             </label>
             <div className="flex justify-center gap-2">
               {otp.map((d, i) => (
@@ -841,7 +851,7 @@ export default function KycFlow({ code }: { code: string }) {
               onClick={handleVerifyOtp}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#145C45] py-3.5 text-sm font-extrabold text-white shadow-md transition hover:bg-[#0f4534] active:scale-[0.98] cursor-pointer"
             >
-              <KeyRound className="h-4 w-4" /> Verify &amp; Continue
+              <KeyRound className="h-4 w-4" /> {t("verifyContinue")}
             </button>
 
             <div className="mt-4 text-center">
@@ -857,7 +867,7 @@ export default function KycFlow({ code }: { code: string }) {
                   }}
                   className="text-xs font-bold text-[#145C45] hover:underline cursor-pointer"
                 >
-                  Didn't receive code? Resend OTP
+                  {t("resendOtp")}
                 </button>
               )}
             </div>
@@ -885,26 +895,26 @@ export default function KycFlow({ code }: { code: string }) {
           {/* Form */}
           <div className="flex-1 min-w-0 rounded-xl bg-white p-4 shadow-sm border border-slate-200">
             <h2 className="mb-3 text-base font-extrabold text-[#145C45] border-b border-[#DDF3E7] pb-2">
-              General Details
+              {t("stepGeneral")}
             </h2>
 
             <div className="grid grid-cols-2 gap-3">
               {/* Client Type */}
-              <FormRow label="Client Type" required half>
+              <FormRow label={t("clientType")} required half>
                 <select
                   value={general.clientType}
                   onChange={(e) => setGeneral({ ...general, clientType: e.target.value })}
                   className={selectCls}
                 >
-                  <option value="">Select Client Type</option>
-                  {CLIENT_TYPES.map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                  <option value="">{t("clientTypeSelect")}</option>
+                  {CLIENT_TYPES.map((t2) => (
+                    <option key={t2} value={t2}>{t2}</option>
                   ))}
                 </select>
               </FormRow>
 
               {/* Mobile Number (pre-filled, readonly) */}
-              <FormRow label="Mobile Number" required note="Verified via OTP" half>
+              <FormRow label={t("mobileNumber")} required note={t("mobileVerifiedViaOtp")} half>
                 <input
                   type="text"
                   value={member.phone}
@@ -914,7 +924,7 @@ export default function KycFlow({ code }: { code: string }) {
               </FormRow>
 
               {/* Online / Offline */}
-              <FormRow label="Online / Offline" required half>
+              <FormRow label={t("onlineOffline")} required half>
                 <div className="flex gap-5 pt-1">
                   {(["online", "offline"] as const).map((v) => (
                     <label key={v} className="flex cursor-pointer items-center gap-2 text-sm font-semibold">
@@ -934,13 +944,13 @@ export default function KycFlow({ code }: { code: string }) {
               </FormRow>
 
               {/* Member Branch */}
-              <FormRow label="Member Branch" required half>
+              <FormRow label={t("memberBranch")} required half>
                 <select
                   value={general.memberBranch}
                   onChange={(e) => setGeneral({ ...general, memberBranch: e.target.value })}
                   className={selectCls}
                 >
-                  <option value="">Select Member Branch</option>
+                  <option value="">{t("memberBranchSelect")}</option>
                   {MEMBER_BRANCHES.map((b) => (
                     <option key={b} value={b}>{b}</option>
                   ))}
@@ -948,18 +958,18 @@ export default function KycFlow({ code }: { code: string }) {
               </FormRow>
 
               {/* PAN Number */}
-              <FormRow label="PAN Number" half>
+              <FormRow label={t("panNumber")} half>
                 <input
                   type="text"
                   value={general.panNumber}
                   onChange={(e) => setGeneral({ ...general, panNumber: e.target.value })}
-                  placeholder="PAN Number (optional)"
+                  placeholder={"PAN Number (optional)"}
                   className={inputCls}
                 />
               </FormRow>
 
               {/* Email */}
-              <FormRow label="Email" required half>
+              <FormRow label={t("email")} required half>
                 <input
                   type="email"
                   value={general.email}
@@ -982,23 +992,23 @@ export default function KycFlow({ code }: { code: string }) {
                 onClick={handleNextGeneral}
                 className="flex items-center gap-2 rounded-lg bg-[#145C45] px-6 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f4534] active:scale-95 cursor-pointer"
               >
-                Next <ChevronRight className="h-4 w-4" />
+                {t("next")} <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </div>
 
           {/* Live Preview */}
           <LivePreview
-            title="General Details"
+            title={t("stepGeneral")}
             memberName={memberName}
             memberPhone={memberPhone}
             rows={[
-              { label: "Client Type", value: general.clientType },
-              { label: "Mobile", value: member.phone },
-              { label: "Submission", value: general.submissionType.toUpperCase() },
-              { label: "Member Branch", value: general.memberBranch },
-              { label: "PAN Number", value: general.panNumber },
-              { label: "Email", value: general.email },
+              { label: t("clientType"), value: general.clientType },
+              { label: t("mobileNumber"), value: member.phone },
+              { label: t("submission"), value: general.submissionType.toUpperCase() },
+              { label: t("memberBranch"), value: general.memberBranch },
+              { label: t("panNumber"), value: general.panNumber },
+              { label: t("email"), value: general.email },
             ]}
           />
         </div>
@@ -1031,13 +1041,13 @@ export default function KycFlow({ code }: { code: string }) {
           {/* Form */}
           <div className="flex-1 min-w-0 rounded-xl bg-white p-4 shadow-sm border border-slate-200">
             <h2 className="mb-3 text-base font-extrabold text-[#145C45] border-b border-[#DDF3E7] pb-2">
-              Address Details
+              {t("stepAddress")}
             </h2>
 
             {/* ── Permanent Address ───────────────────────── */}
-            <p className="mb-2 text-xs font-bold text-[#145C45] uppercase tracking-wide">Permanent Address</p>
+            <p className="mb-2 text-xs font-bold text-[#145C45] uppercase tracking-wide">{t("permanentAddress")}</p>
             <div className="grid grid-cols-2 gap-3">
-              <FormRow label="Country of Residence" required half>
+              <FormRow label={t("countryOfResidence")} required half>
                 <select
                   value={addr.country}
                   onChange={(e) => setAddr({ ...addr, country: e.target.value })}
@@ -1049,7 +1059,7 @@ export default function KycFlow({ code }: { code: string }) {
                 </select>
               </FormRow>
 
-              <FormRow label="State / Province" required half>
+              <FormRow label={t("stateProvince")} required half>
                 <select
                   value={addr.state}
                   onChange={(e) => setAddr({ ...addr, state: e.target.value, district: "", municipality: "" })}
@@ -1062,7 +1072,7 @@ export default function KycFlow({ code }: { code: string }) {
                 </select>
               </FormRow>
 
-              <FormRow label="District" required half>
+              <FormRow label={t("district")} required half>
                 <select
                   value={addr.district}
                   onChange={(e) => setAddr({ ...addr, district: e.target.value, municipality: "" })}
@@ -1076,7 +1086,7 @@ export default function KycFlow({ code }: { code: string }) {
                 </select>
               </FormRow>
 
-              <FormRow label="Municipality" required half>
+              <FormRow label={t("municipality")} required half>
                 <select
                   value={addr.municipality}
                   onChange={(e) => setAddr({ ...addr, municipality: e.target.value })}
@@ -1096,7 +1106,7 @@ export default function KycFlow({ code }: { code: string }) {
                 </select>
               </FormRow>
 
-              <FormRow label="Ward No" required half>
+              <FormRow label={t("wardNo")} required half>
                 <input
                   type="text"
                   value={addr.wardNo}
@@ -1106,7 +1116,7 @@ export default function KycFlow({ code }: { code: string }) {
                 />
               </FormRow>
 
-              <FormRow label="Street / Tole" required half>
+              <FormRow label={t("streetTole")} required half>
                 <input
                   type="text"
                   value={addr.streetTole}
@@ -1127,7 +1137,7 @@ export default function KycFlow({ code }: { code: string }) {
                   className="h-4 w-4 rounded"
                   style={{ accentColor: "#145C45" }}
                 />
-                Same as Permanent Address
+                {t("sameAsPermanent")}
               </label>
 
               <button
@@ -1135,34 +1145,34 @@ export default function KycFlow({ code }: { code: string }) {
                 onClick={() => setAddr({ ...addr, hasTempAddress: !addr.hasTempAddress })}
                 className="mt-2 flex items-center gap-1 text-sm font-semibold text-[#145C45] hover:underline cursor-pointer"
               >
-                {addr.hasTempAddress ? "− Hide" : "+ Add"} Temporary Address
+                {addr.hasTempAddress ? t("hideTemporaryAddress") : t("addTemporaryAddress")} Temporary Address
               </button>
 
               {addr.hasTempAddress && !addr.sameAsPermanent && (
                 <div className="mt-3 grid grid-cols-2 gap-3">
-                  <p className="col-span-2 text-xs font-bold text-[#145C45] uppercase tracking-wide">Temporary Address</p>
+                  <p className="col-span-2 text-xs font-bold text-[#145C45] uppercase tracking-wide">{t("temporaryAddress")}</p>
 
-                  <FormRow label="Country" required half>
+                  <FormRow label={t("tempCountry")} required half>
                     <select value={addr.tempCountry} onChange={(e) => setAddr({ ...addr, tempCountry: e.target.value })} className={selectCls}>
                       {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </FormRow>
 
-                  <FormRow label="State / Province" required half>
+                  <FormRow label={t("stateProvince")} required half>
                     <select value={addr.tempState} onChange={(e) => setAddr({ ...addr, tempState: e.target.value, tempDistrict: "", tempMunicipality: "" })} className={selectCls}>
                       <option value="">Select State</option>
                       {NEPAL_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
                     </select>
                   </FormRow>
 
-                  <FormRow label="District" required half>
+                  <FormRow label={t("district")} required half>
                     <select value={addr.tempDistrict} onChange={(e) => setAddr({ ...addr, tempDistrict: e.target.value, tempMunicipality: "" })} className={selectCls} disabled={!addr.tempState}>
                       <option value="">Select District</option>
                       {tempDistricts.map((d) => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </FormRow>
 
-                  <FormRow label="Municipality" required half>
+                  <FormRow label={t("municipality")} required half>
                     <select value={addr.tempMunicipality} onChange={(e) => setAddr({ ...addr, tempMunicipality: e.target.value })} className={selectCls} disabled={!addr.tempDistrict}>
                       <option value="">Select Municipality</option>
                       {tempMunicipalities.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -1175,11 +1185,11 @@ export default function KycFlow({ code }: { code: string }) {
                     </select>
                   </FormRow>
 
-                  <FormRow label="Ward No" required half>
+                  <FormRow label={t("wardNo")} required half>
                     <input type="text" value={addr.tempWardNo} onChange={(e) => setAddr({ ...addr, tempWardNo: e.target.value })} placeholder="Ward Number" className={inputCls} />
                   </FormRow>
 
-                  <FormRow label="Street / Tole" required half>
+                  <FormRow label={t("streetTole")} required half>
                     <input type="text" value={addr.tempStreetTole} onChange={(e) => setAddr({ ...addr, tempStreetTole: e.target.value })} placeholder="Street/Tole" className={inputCls} />
                   </FormRow>
                 </div>
@@ -1194,31 +1204,31 @@ export default function KycFlow({ code }: { code: string }) {
 
             <div className="mt-4 flex items-center justify-between">
               <button type="button" onClick={() => setScreen("general")} className="rounded border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50">
-                Back
+                {t("back")}
               </button>
               <button type="button" onClick={handleNextAddress} className="flex items-center gap-2 rounded-lg bg-[#145C45] px-6 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f4534] active:scale-95 cursor-pointer">
-                Next <ChevronRight className="h-4 w-4" />
+                {t("next")} <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </div>
 
           {/* Live Preview */}
           <LivePreview
-            title="Address Details"
+            title={t("stepAddress")}
             memberName={memberName}
             memberPhone={memberPhone}
             rows={[
-              { label: "Country", value: addr.country },
-              { label: "Province", value: addr.state },
-              { label: "District", value: addr.district },
-              { label: "Municipality", value: addr.municipality },
-              { label: "Ward No", value: addr.wardNo },
-              { label: "Street / Tole", value: addr.streetTole },
+              { label: t("country"), value: addr.country },
+              { label: t("province"), value: addr.state },
+              { label: t("district"), value: addr.district },
+              { label: t("municipality"), value: addr.municipality },
+              { label: t("wardNo"), value: addr.wardNo },
+              { label: t("streetTole"), value: addr.streetTole },
               ...(addr.hasTempAddress && !addr.sameAsPermanent
                 ? [
-                    { label: "Temp Province", value: addr.tempState },
-                    { label: "Temp District", value: addr.tempDistrict },
-                    { label: "Temp Ward No", value: addr.tempWardNo },
+                    { label: t("tempProvince"), value: addr.tempState },
+                    { label: t("tempDistrict"), value: addr.tempDistrict },
+                    { label: t("tempWardNo"), value: addr.tempWardNo },
                   ]
                 : []),
             ]}
@@ -1242,25 +1252,25 @@ export default function KycFlow({ code }: { code: string }) {
           {/* Form */}
           <div className="flex-1 min-w-0 rounded-xl bg-white p-4 shadow-sm border border-slate-200">
             <div className="mb-3 flex items-center justify-between border-b border-[#DDF3E7] pb-2">
-              <h2 className="text-base font-extrabold text-[#145C45]">Documents Upload</h2>
+              <h2 className="text-base font-extrabold text-[#145C45]">{t("documents")}</h2>
               <span className="text-xs font-bold text-slate-500">
                 {uploadedCount}/{totalDocs} uploaded
               </span>
             </div>
             <p className="mb-3 text-xs font-semibold text-red-500">
-              ⚠ Disclaimer: Please upload documents upto 5 MB each
+              ⚠ {t("documentsDisclaimer")}
             </p>
 
             <div className="divide-y divide-slate-100">
-              <DocRow label="Citizenship Certificates Front and Back" hint="(.pdf, .jpg format)" required value={docs.citizenshipFront} onChange={setDoc("citizenshipFront")} />
-              <DocRow label="Selfie With Citizenship" hint="(.jpg format)" required value={docs.selfie} onChange={setDoc("selfie")} />
-              <DocRow label="Birth Certificate (Incase of Minor)" hint="(.pdf, .jpg format)" value={docs.birthCert} onChange={setDoc("birthCert")} />
-              <DocRow label="PAN Card" hint="(.jpg format)" value={docs.panDoc} onChange={setDoc("panDoc")} />
-              <DocRow label="KYC Form Upload" hint="(.pdf, .jpg format)" required value={docs.kycForm} onChange={setDoc("kycForm")} />
-              <DocRow label="Photo Upload" hint="(.jpg format)" required value={docs.photo} onChange={setDoc("photo")} />
-              <DocRow label="Online Agreement Form" hint="(.pdf, .jpg format)" required value={docs.agreement} onChange={setDoc("agreement")} />
-              <DocRow label="National ID" hint="(.pdf, .jpg, .jpeg format)" required value={docs.nationalId} onChange={setDoc("nationalId")} />
-              <DocRow label="Company Registration Document" hint="(.pdf, .jpg format)" value={docs.companyReg} onChange={setDoc("companyReg")} />
+              <DocRow label={t("citizenshipFrontBack")} hint={t("hintCitizenship")} required value={docs.citizenshipFront} onChange={setDoc("citizenshipFront")} />
+              <DocRow label={t("selfieWithCitizenship")} hint={t("hintSelfie")} required value={docs.selfie} onChange={setDoc("selfie")} />
+              <DocRow label={t("birthCertificate")} hint={t("hintBirthCert")} value={docs.birthCert} onChange={setDoc("birthCert")} />
+              <DocRow label={t("panCard")} hint={t("hintPan")} value={docs.panDoc} onChange={setDoc("panDoc")} />
+              <DocRow label={t("kycForm")} hint={t("hintKycForm")} required value={docs.kycForm} onChange={setDoc("kycForm")} />
+              <DocRow label={t("photoUpload")} hint={t("hintPhoto")} required value={docs.photo} onChange={setDoc("photo")} />
+              <DocRow label={t("onlineAgreement")} hint={t("hintOnlineAgreement")} required value={docs.agreement} onChange={setDoc("agreement")} />
+              <DocRow label={t("nationalId")} hint={t("hintNationalId")} required value={docs.nationalId} onChange={setDoc("nationalId")} />
+              <DocRow label={t("companyRegistration")} hint={t("hintCompanyReg")} value={docs.companyReg} onChange={setDoc("companyReg")} />
             </div>
 
             {docsErr && (
@@ -1271,10 +1281,10 @@ export default function KycFlow({ code }: { code: string }) {
 
             <div className="mt-4 flex items-center justify-between">
               <button type="button" onClick={() => setScreen("address")} className="rounded border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50">
-                Back
+                {t("back")}
               </button>
               <button type="button" onClick={handleNextDocs} className="flex items-center gap-2 rounded-lg bg-[#145C45] px-6 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f4534] active:scale-95 cursor-pointer">
-                Next <ChevronRight className="h-4 w-4" />
+                {t("next")} <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -1284,7 +1294,7 @@ export default function KycFlow({ code }: { code: string }) {
             <div className="sticky top-4 rounded-xl border border-[#DDF3E7] bg-white shadow-sm overflow-hidden">
               <div className="bg-[#145C45] px-4 py-3 flex items-center gap-2">
                 <FileText className="h-4 w-4 text-[#DDF3E7] shrink-0" />
-                <span className="text-xs font-bold text-white">Documents Checklist</span>
+                <span className="text-xs font-bold text-white">{t("documentsChecklist")}</span>
               </div>
               <div className="px-4 py-3 bg-[#DDF3E7]/40 border-b border-[#DDF3E7]">
                 <div className="flex items-center gap-2 mb-1">
@@ -1301,15 +1311,15 @@ export default function KycFlow({ code }: { code: string }) {
               <div className="px-4 py-2 space-y-1.5">
                 {(
                   [
-                    { key: "citizenshipFront", label: "Citizenship" },
-                    { key: "selfie", label: "Selfie" },
-                    { key: "birthCert", label: "Birth Certificate" },
-                    { key: "panDoc", label: "PAN Card" },
-                    { key: "kycForm", label: "KYC Form" },
-                    { key: "photo", label: "Photo" },
-                    { key: "agreement", label: "Agreement" },
-                    { key: "nationalId", label: "National ID" },
-                    { key: "companyReg", label: "Company Reg." },
+                    { key: "citizenshipFront", label: t("citizenshipFrontBack") },
+                    { key: "selfie", label: t("selfieWithCitizenship") },
+                    { key: "birthCert", label: t("birthCertificate") },
+                    { key: "panDoc", label: t("panCard") },
+                    { key: "kycForm", label: t("kycForm") },
+                    { key: "photo", label: t("photoUpload") },
+                    { key: "agreement", label: t("onlineAgreement") },
+                    { key: "nationalId", label: t("nationalId") },
+                    { key: "companyReg", label: t("companyRegistration") },
                   ] as { key: keyof typeof docs; label: string }[]
                 ).map(({ key, label }) => (
                   <div key={key} className="flex items-center gap-2 py-0.5">
@@ -1346,13 +1356,13 @@ export default function KycFlow({ code }: { code: string }) {
           <div className="flex-1 min-w-0 rounded-xl bg-white p-4 shadow-sm border border-slate-200">
             {/* Title + Print button */}
             <div className="mb-3 flex items-center justify-between border-b border-[#DDF3E7] pb-2">
-              <h2 className="text-base font-extrabold text-[#145C45]">User Agreement</h2>
+              <h2 className="text-base font-extrabold text-[#145C45]">{t("stepAgreement")}</h2>
               <button
                 type="button"
                 onClick={() => window.print()}
                 className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
               >
-                <Printer className="h-3.5 w-3.5" /> Print
+                <Printer className="h-3.5 w-3.5" /> {t("print")}
               </button>
             </div>
 
@@ -1394,7 +1404,7 @@ export default function KycFlow({ code }: { code: string }) {
                 style={{ accentColor: "#145C45" }}
               />
               <span className="text-xs font-semibold text-[#145C45] leading-relaxed">
-                I have read and understood all the terms and conditions above. I agree to comply with all cooperative regulations and provide accurate information.
+                {t("agreeCheckbox")}
               </span>
             </label>
 
@@ -1410,7 +1420,7 @@ export default function KycFlow({ code }: { code: string }) {
                 onClick={() => setScreen("documents")}
                 className="rounded border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
               >
-                Back
+                {t("back")}
               </button>
               <button
                 type="button"
@@ -1419,9 +1429,9 @@ export default function KycFlow({ code }: { code: string }) {
                 className="flex items-center gap-2 rounded-lg bg-[#059669] px-6 py-2 text-sm font-extrabold text-white shadow-sm transition hover:bg-emerald-700 active:scale-95 disabled:opacity-60 cursor-pointer"
               >
                 {submitting ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>
+                  <><Loader2 className="h-4 w-4 animate-spin" /> {t("submitting")}</>
                 ) : (
-                  <><CheckCircle2 className="h-4 w-4" /> Submit KYC</>
+                  <><CheckCircle2 className="h-4 w-4" /> {t("submitKyc")}</>
                 )}
               </button>
             </div>
@@ -1470,16 +1480,32 @@ export default function KycFlow({ code }: { code: string }) {
 
 // ─── Member Status Screen (already submitted) ─────────────────────────────────
 function MemberStatusScreen({ member }: { member: Member }) {
+  const { t } = useI18n();
+
+  const statusLabelKeys: Record<string, TranslationKey> = {
+    invited: "statusInvited",
+    submitted: "statusSubmitted",
+    pending: "statusPending",
+    approved: "statusApproved",
+    rejected: "statusRejected",
+    printed: "statusPrinted",
+  };
+
   const msgs: Record<string, string> = {
-    submitted: "Your KYC has been received and is in the review queue.",
-    pending: "The manager is currently reviewing your KYC documents.",
-    approved: "Your KYC is approved. The official form is being prepared for printing.",
-    rejected: "Your KYC was rejected. Please contact the cooperative admin to correct and resubmit.",
-    printed: "Your KYC has been approved and printed into the official record.",
+    submitted: t("statusMsgSubmitted"),
+    pending: t("statusMsgPending"),
+    approved: t("statusMsgApproved"),
+    rejected: t("statusMsgRejected"),
+    printed: t("statusMsgPrinted"),
   };
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-[#F8FAFC] p-6 text-center">
+    <div className="relative flex min-h-dvh flex-col items-center justify-center gap-4 bg-[#F8FAFC] p-6 text-center">
+      {/* Language toggle (English / नेपाली) */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageToggle />
+      </div>
+
       <div className={`flex h-20 w-20 items-center justify-center rounded-3xl ${
         member.status === "rejected" ? "bg-red-100" : member.status === "approved" || member.status === "printed" ? "bg-emerald-100" : "bg-amber-100"
       }`}>
@@ -1494,7 +1520,7 @@ function MemberStatusScreen({ member }: { member: Member }) {
 
       <div>
         <h1 className="text-2xl font-black text-slate-900">
-          {STATUS_LABEL[member.status]}
+          {t(statusLabelKeys[member.status] ?? "statusInvited")}
         </h1>
         <p className="mt-1 max-w-xs text-sm text-slate-500">{msgs[member.status]}</p>
         <div className="mt-3 flex justify-center">
@@ -1505,15 +1531,15 @@ function MemberStatusScreen({ member }: { member: Member }) {
       <div className="w-full max-w-xs rounded-2xl border border-[#DDF3E7] bg-white p-4 text-left text-xs shadow-sm">
         <dl className="space-y-2">
           <div className="flex justify-between">
-            <dt className="text-slate-400">Member Name</dt>
+            <dt className="text-slate-400">{t("statusMemberName")}</dt>
             <dd className="font-bold text-slate-800">{member.name}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-slate-400">Member Code</dt>
+            <dt className="text-slate-400">{t("statusMemberCode")}</dt>
             <dd className="font-bold text-slate-800">{member.membershipCode}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-slate-400">Mobile</dt>
+            <dt className="text-slate-400">{t("statusMobile")}</dt>
             <dd className="font-bold text-slate-800">+977 {member.phone}</dd>
           </div>
         </dl>
@@ -1524,14 +1550,14 @@ function MemberStatusScreen({ member }: { member: Member }) {
           onClick={() => navigate("/")}
           className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
         >
-          ← Back to Home
+          {t("backToHome")}
         </button>
       ) : (
         <button
           onClick={() => navigate("/admin")}
           className="rounded-xl bg-[#145C45] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f4534]"
         >
-          Go to Manager Portal
+          {t("goToManagerPortal")}
         </button>
       )}
     </div>

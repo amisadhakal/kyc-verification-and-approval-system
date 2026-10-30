@@ -11,8 +11,18 @@ import {
 } from "lucide-react";
 import type { KycStatus } from "../lib/types";
 import { KYC_FLOW, STATUS_LABEL } from "../lib/types";
+import { useI18n, type TranslationKey } from "../lib/i18n";
 import { navigate } from "../lib/router";
 import { useStore } from "../lib/store";
+
+const STATUS_I18N_KEYS: Record<string, TranslationKey> = {
+  invited: "statusInvited",
+  submitted: "statusSubmitted",
+  pending: "statusPending",
+  approved: "statusApproved",
+  rejected: "statusRejected",
+  printed: "statusPrinted",
+};
 
 const STATUS_STYLES: Record<
   string,
@@ -57,13 +67,15 @@ const STATUS_STYLES: Record<
 };
 
 export function StatusPill({ status }: { status: KycStatus }) {
+  const { t } = useI18n();
   const s = STATUS_STYLES[status] ?? STATUS_STYLES.invited;
+  const labelKey = STATUS_I18N_KEYS[status] ?? "statusInvited";
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${s.pill}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {STATUS_LABEL[status]}
+      {t(labelKey)}
     </span>
   );
 }
@@ -92,6 +104,8 @@ export function StatusIcon({
 }
 
 export function StatusStepper({ status }: { status: KycStatus }) {
+  const { t } = useI18n();
+
   if (status === "rejected") {
     return (
       <div className="rounded-2xl border border-rose-200 bg-rose-50/80 p-4">
@@ -117,11 +131,11 @@ export function StatusStepper({ status }: { status: KycStatus }) {
           const state =
             i < currentIdx ? "done" : i === currentIdx ? "current" : "todo";
           const labels = [
-            "Invited",
-            "Submitted",
-            "Review",
-            "Approved",
-            "Printed",
+            t("stepInvited"),
+            t("stepSubmitted"),
+            t("stepReview"),
+            t("stepApproved"),
+            t("stepPrinted"),
           ];
           return (
             <li key={step} className="flex flex-1 items-center last:flex-none">
@@ -281,12 +295,13 @@ export function SmsModal({
   } | null;
 }) {
   const { state } = useStore();
+  const { t } = useI18n();
   const org = state.orgSettings;
   const [copied, setCopied] = useState(false);
   if (!open || !data) return null;
 
   const orgTag = org.shortName || org.nameEnglish || "Coop KYC";
-  const smsText = `${orgTag}: Dear ${data.name}, please complete your KYC form at kyc.coop/${data.inviteCode.toLowerCase()} . Your verification OTP is: ${data.otp} (Valid for 10 min).`;
+  const smsText = t("smsBody", { name: data.name, code: data.inviteCode.toLowerCase(), otp: data.otp });
 
   const copyText = async () => {
     try {
@@ -304,7 +319,7 @@ export function SmsModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="SMS Delivered to Member">
+    <Modal open={open} onClose={onClose} title={t("smsDelivered")}>
       <div className="space-y-4">
         <div className="flex items-center gap-3 rounded-2xl bg-[#DDF3E7]/80 p-3.5 border border-[#145C45]/20">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#145C45] text-white shadow-sm">
@@ -312,7 +327,7 @@ export function SmsModal({
           </div>
           <div>
             <p className="text-xs font-semibold text-[#145C45]/80">
-              Recipient: <span className="font-bold text-[#145C45]">{data.name}</span>
+              {t("smsRecipient")}: <span className="font-bold text-[#145C45]">{data.name}</span>
             </p>
             <p className="text-xs text-[#145C45] font-mono">+977 {data.phone}</p>
           </div>
@@ -328,27 +343,7 @@ export function SmsModal({
           </div>
           <div className="rounded-xl bg-slate-800 p-3.5 text-sm leading-relaxed text-slate-100 border border-slate-700">
             <p>
-              Dear <span className="font-semibold text-white">{data.name}</span>,
-            </p>
-            <p className="mt-1">
-              Please complete your cooperative KYC verification using this secure link:
-            </p>
-            <div className="my-2.5 rounded-lg bg-[#145C45]/80 p-2.5 border border-[#145C45] font-mono text-xs text-[#DDF3E7]">
-              <div className="flex items-center justify-between">
-                <span>🔗 Link:</span>
-                <span className="font-bold text-white underline">
-                  kyc.coop/{data.inviteCode.toLowerCase()}
-                </span>
-              </div>
-              <div className="mt-1 flex items-center justify-between">
-                <span>🔑 OTP Code:</span>
-                <span className="text-base font-extrabold tracking-widest text-amber-300">
-                  {data.otp}
-                </span>
-              </div>
-            </div>
-            <p className="text-xs text-slate-400">
-              Valid for 10 minutes. Do not share this OTP with anyone.
+              {t("smsBody", { name: data.name, code: data.inviteCode.toLowerCase(), otp: data.otp })}
             </p>
           </div>
         </div>
@@ -358,20 +353,20 @@ export function SmsModal({
             onClick={handleOpenLink}
             className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#145C45] hover:bg-[#0f4534] active:scale-[0.99] py-3.5 text-sm font-bold text-white shadow-md transition cursor-pointer"
           >
-            <ExternalLink className="h-4 w-4" /> Open Member KYC Form (Step 3)
+            <ExternalLink className="h-4 w-4" /> {t("openMemberForm")}
           </button>
           <div className="flex gap-2">
             <button
               onClick={copyText}
               className="flex-1 rounded-xl border border-[#145C45]/30 bg-[#DDF3E7]/40 py-2.5 text-xs font-semibold text-[#145C45] hover:bg-[#DDF3E7] transition cursor-pointer"
             >
-              {copied ? "✓ Copied to clipboard!" : "Copy SMS Text"}
+              {copied ? t("copied") : t("copySms")}
             </button>
             <button
               onClick={onClose}
               className="rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 transition cursor-pointer"
             >
-              Close
+              {t("close")}
             </button>
           </div>
         </div>

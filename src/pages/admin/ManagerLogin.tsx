@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   AlertCircle,
   Eye,
@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { CoopLogo } from "../../components/CoopLogo";
 import { useStore } from "../../lib/store";
+import { useI18n } from "../../lib/i18n";
 import { navigate } from "../../lib/router";
+import LanguageToggle from "../../components/LanguageToggle";
 import {
   isValidManagerCredentials,
   startManagerDemoSession,
@@ -19,12 +21,20 @@ import {
 
 export default function ManagerLogin() {
   const { state } = useStore();
+  const { t } = useI18n();
   const org = state.orgSettings;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Manager login renders as a full-screen single page → remove page scrollbar
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("no-page-scroll");
+    return () => root.classList.remove("no-page-scroll");
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -40,7 +50,7 @@ export default function ManagerLogin() {
     setIsProcessing(false);
 
     if (!isValid) {
-      setError("Invalid email or password. Please try again.");
+      setError(t("invalidCredentials"));
       return;
     }
 
@@ -55,6 +65,10 @@ export default function ManagerLogin() {
 
   return (
     <div className="relative min-h-dvh flex items-center justify-center bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 overflow-x-hidden">
+      {/* Language toggle (English / नेपाली) */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageToggle />
+      </div>
       {/* Ambient Radial Highlights */}
       <div
         aria-hidden="true"
@@ -94,10 +108,10 @@ export default function ManagerLogin() {
         {/* Heading & Description */}
         <div className="mb-6 text-center">
           <h2 className="text-lg font-extrabold text-slate-900 leading-tight">
-            Manager Login
+            {t("managerLogin")}
           </h2>
           <p className="mt-1.5 text-xs text-slate-500">
-            Sign in to access the KYC management dashboard.
+            {t("managerLoginSubtitle")}
           </p>
         </div>
 
@@ -109,7 +123,7 @@ export default function ManagerLogin() {
               htmlFor="manager-email"
               className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700"
             >
-              Email
+              {t("email")}
             </label>
             <div
               className={`relative flex items-center rounded-xl border bg-slate-50/70 transition-all focus-within:bg-white ${
@@ -143,7 +157,7 @@ export default function ManagerLogin() {
               htmlFor="manager-password"
               className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700"
             >
-              Password
+              {t("password")}
             </label>
             <div
               className={`relative flex items-center rounded-xl border bg-slate-50/70 transition-all focus-within:bg-white ${
@@ -203,12 +217,12 @@ export default function ManagerLogin() {
             {isProcessing ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Signing In…</span>
+                <span>{t("signingIn")}</span>
               </>
             ) : (
               <>
                 <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
+                <span>{t("signIn")}</span>
               </>
             )}
           </button>
@@ -222,7 +236,7 @@ export default function ManagerLogin() {
             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#145C45] hover:text-[#0f4534] transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#145C45]/30 rounded-lg px-2 py-1"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>← Return to Home</span>
+            <span>{t("returnToHome")}</span>
           </button>
         </div>
       </div>

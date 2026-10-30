@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { StoreProvider, useStore } from "./lib/store";
+import { I18nProvider, useI18n } from "./lib/i18n";
 import { navigate, useRoute } from "./lib/router";
 import KycFlow from "./pages/member/KycFlow";
 import AdminApp from "./pages/admin/AdminApp";
@@ -18,6 +19,7 @@ import ManagerLogin from "./pages/admin/ManagerLogin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrintView from "./pages/print/PrintView";
 import { CoopLogo } from "./components/CoopLogo";
+import LanguageToggle from "./components/LanguageToggle";
 
 // ── Landing Page ─────────────────────────────────────────────────────────────
 // Refined, trustworthy landing page tailored for Nepali Cooperatives.
@@ -25,17 +27,25 @@ import { CoopLogo } from "./components/CoopLogo";
 // Cooperative staff/managers navigate to the review dashboard.
 function LandingPage() {
   const { state, findByInviteCode } = useStore();
+  const { t } = useI18n();
   const org = state.orgSettings;
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isValidating, setIsValidating] = useState(false);
+
+  // Landing page renders as a full-screen single page → remove page scrollbar
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("no-page-scroll");
+    return () => root.classList.remove("no-page-scroll");
+  }, []);
 
   const handleOpen = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = code.trim().toUpperCase();
 
     if (!trimmed) {
-      setError("कृपया आफ्नो SMS मा पठाइएको निमन्त्रणा कोड प्रविष्ट गर्नुहोस्। (Please enter your invite code)");
+      setError(t("inviteCodeRequired"));
       return;
     }
 
@@ -53,9 +63,7 @@ function LandingPage() {
 
       if (!matched) {
         setIsValidating(false);
-        setError(
-          "निमन्त्रणा कोड फेला परेन। कृपया आफ्नो सहकारी SMS मा प्राप्त कोड पुनः जाँच गर्नुहोस्।"
-        );
+        setError(t("inviteCodeNotFound"));
         return;
       }
 
@@ -66,6 +74,10 @@ function LandingPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#145C45] via-[#115E59] to-[#0A382A] text-slate-900 px-4 py-8 sm:py-12 selection:bg-[#DDF3E7] selection:text-[#145C45] overflow-x-hidden">
+      {/* Language toggle (English / नेपाली) */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageToggle />
+      </div>
       {/* ── Background Subtle Decorative Elements (Restrained) ───────── */}
       <div
         aria-hidden="true"
@@ -159,14 +171,14 @@ function LandingPage() {
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-extrabold text-slate-900 leading-tight">
-                  सदस्य पहिचान (KYC) पोर्टल
+                  {t("memberPortalTitle")}
                 </h2>
               </div>
               <p className="text-xs font-semibold text-[#145C45] uppercase tracking-wide mt-0.5">
-                Member Verification Portal
+                {org.nameEnglish}
               </p>
               <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-                Enter your invitation code received via SMS to complete verification.
+                {t("memberPortalHint")}
               </p>
             </div>
           </div>
@@ -178,7 +190,7 @@ function LandingPage() {
                 htmlFor="invite-code-input"
                 className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700"
               >
-                निमन्त्रणा कोड <span className="font-normal text-slate-500">(Invite Code)</span>
+                {t("inviteCode")}
               </label>
 
               <div
@@ -241,11 +253,11 @@ function LandingPage() {
               {isValidating ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>जाँच गरिँदैछ (Verifying Code)...</span>
+                  <span>{t("verifyingCode")}</span>
                 </>
               ) : (
                 <>
-                  <span>केवाईसी फारम खोल्नुहोस् (Open KYC Form)</span>
+                  <span>{t("openKycForm")}</span>
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -259,7 +271,7 @@ function LandingPage() {
             </div>
             <div className="relative flex justify-center text-xs">
               <span className="bg-white px-3 text-slate-400 font-medium">
-                सहकारी व्यवस्थापन (Staff Access)
+                {t("staffAccess")}
               </span>
             </div>
           </div>
@@ -275,10 +287,10 @@ function LandingPage() {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-slate-800 group-hover:text-[#145C45] transition truncate">
-                  व्यवस्थापक डेस्क (Manager Portal)
+                  {t("managerPortal")}
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Review, approve &amp; print KYC records
+                  {t("managerPortalHint")}
                 </p>
               </div>
             </div>
@@ -338,7 +350,9 @@ function Routes() {
 export default function App() {
   return (
     <StoreProvider>
-      <Routes />
+      <I18nProvider>
+        <Routes />
+      </I18nProvider>
     </StoreProvider>
   );
 }

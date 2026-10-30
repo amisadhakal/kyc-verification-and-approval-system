@@ -11,22 +11,24 @@ import {
   XCircle,
 } from "lucide-react";
 import { useStore } from "../../lib/store";
+import { useI18n } from "../../lib/i18n";
 import { navigate } from "../../lib/router";
 import { formatDateTime, timeAgo } from "../../lib/utils";
 import { Avatar, StatusPill } from "../../components/ui";
 import { RejectModal } from "./SubmissionDetail";
 import type { KycSubmission, KycStatus } from "../../lib/types";
 
-const FILTERS: { key: string; label: string }[] = [
-  { key: "all", label: "All Submissions" },
-  { key: "pending", label: "Pending Review" },
-  { key: "approved", label: "Approved" },
-  { key: "rejected", label: "Rejected" },
-  { key: "printed", label: "Printed" },
+const FILTERS: { key: string; labelKey: string }[] = [
+  { key: "all", labelKey: "allSubmissions" },
+  { key: "pending", labelKey: "statusPending" },
+  { key: "approved", labelKey: "statusApproved" },
+  { key: "rejected", labelKey: "statusRejected" },
+  { key: "printed", labelKey: "statusPrinted" },
 ];
 
 export default function Dashboard() {
   const { state } = useStore();
+  const { t } = useI18n();
   const [filter, setFilter] = useState("all");
 
   const stats = useMemo(() => {
@@ -54,31 +56,31 @@ export default function Dashboard() {
 
   const cards = [
     {
-      label: "Pending Review",
+      labelKey: "statusPending",
       value: stats.pending,
       icon: Clock,
       cls: "bg-amber-50 text-amber-600 border border-amber-200/80",
     },
     {
-      label: "Approved",
+      labelKey: "statusApproved",
       value: stats.approved,
       icon: CheckCircle2,
       cls: "bg-emerald-50 text-emerald-600 border border-emerald-200/80",
     },
     {
-      label: "Rejected",
+      labelKey: "statusRejected",
       value: stats.rejected,
       icon: XCircle,
       cls: "bg-rose-50 text-rose-600 border border-rose-200/80",
     },
     {
-      label: "Printed",
+      labelKey: "statusPrinted",
       value: stats.printed,
       icon: Printer,
       cls: "bg-[#DDF3E7] text-[#145C45] border border-[#145C45]/20",
     },
     {
-      label: "Total Members",
+      labelKey: "totalMembers",
       value: stats.members,
       icon: UsersIcon,
       cls: "bg-slate-50 text-slate-700 border border-slate-200/80",
@@ -91,10 +93,10 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-            Manager Review Dashboard
+            {t("dashboardTitle")}
           </h2>
           <p className="text-xs sm:text-sm text-slate-500">
-            Review submitted member KYC documents, approve or reject, and print official KYC forms.
+            {t("dashboardSubtitle")}
           </p>
         </div>
       </div>
@@ -109,10 +111,10 @@ export default function Dashboard() {
               </div>
               <div>
                 <p className="text-sm font-extrabold text-white">
-                  {stats.pending} Submission{stats.pending > 1 ? "s" : ""} Waiting for Review
+                  {t("pendingQueueAlert", { count: stats.pending })}
                 </p>
                 <p className="text-xs text-[#DDF3E7]">
-                  New member KYC submissions have been received and need your decision.
+                  {t("newSubmissionsWaiting")}
                 </p>
               </div>
             </div>
@@ -120,7 +122,7 @@ export default function Dashboard() {
               onClick={() => setFilter("pending")}
               className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#DDF3E7] hover:bg-white active:scale-95 px-4 py-2 text-xs font-bold text-[#145C45] transition self-start sm:self-auto shadow-sm cursor-pointer"
             >
-              Filter Pending Queue →
+              {t("filterPendingQueue")} →
             </button>
           </div>
         </div>
@@ -132,11 +134,11 @@ export default function Dashboard() {
           const Icon = c.icon;
           return (
             <div
-              key={c.label}
+              key={c.labelKey}
               className={`rounded-2xl p-3.5 shadow-sm bg-white border transition hover:shadow-md ${c.cls}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-600 truncate">{c.label}</span>
+                <span className="text-xs font-bold text-slate-600 truncate">{t(c.labelKey)}</span>
                 <Icon className="h-4 w-4 shrink-0" />
               </div>
               <p className="mt-2 text-2xl font-black text-slate-900">{c.value}</p>
@@ -158,7 +160,7 @@ export default function Dashboard() {
                   : "bg-white text-slate-600 border border-slate-200 hover:bg-[#DDF3E7] hover:text-[#145C45] hover:border-[#145C45]/30"
               }`}
             >
-              {f.label}
+              {t(f.labelKey)}
             </button>
           ))}
         </div>
@@ -168,9 +170,9 @@ export default function Dashboard() {
           {filtered.length === 0 && (
             <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
               <FileText className="mx-auto h-10 w-10 text-slate-300" />
-              <p className="mt-3 text-sm font-bold text-slate-600">No submissions found</p>
+              <p className="mt-3 text-sm font-bold text-slate-600">{t("noSubmissions")}</p>
               <p className="mt-1 text-xs text-slate-400">
-                KYC submissions will appear here once members submit the online form.
+                {t("noSubmissionsHint")}
               </p>
             </div>
           )}
@@ -244,7 +246,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
             className="flex items-center justify-center gap-1.5 rounded-xl border border-[#145C45]/30 bg-[#DDF3E7]/60 hover:bg-[#DDF3E7] text-[#145C45] font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-[#145C45]/30 cursor-pointer"
           >
             <Eye className="h-4 w-4" />
-            <span>View Details</span>
+            <span>{t("viewDetails")}</span>
           </button>
 
           {/* Approve and Reject */}
@@ -255,7 +257,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
                 className="flex items-center justify-center gap-1.5 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 text-xs sm:text-sm shadow-sm shadow-emerald-600/20 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
               >
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Approve</span>
+                <span>{t("approve")}</span>
               </button>
 
               <button
@@ -263,7 +265,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
                 className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold py-2.5 px-3 text-xs sm:text-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
               >
                 <XCircle className="h-4 w-4 text-rose-600" />
-                <span>Reject</span>
+                <span>{t("reject")}</span>
               </button>
             </>
           )}
@@ -275,7 +277,7 @@ function SubmissionCard({ sub }: { sub: KycSubmission }) {
               className="flex items-center justify-center gap-1.5 rounded-xl bg-[#145C45] hover:bg-[#0f4534] text-white font-bold py-2.5 px-4 text-xs sm:text-sm shadow-sm active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-[#145C45] cursor-pointer"
             >
               <Printer className="h-4 w-4" />
-              <span>Print KYC Form</span>
+              <span>{t("printKycForm")}</span>
             </button>
           )}
 

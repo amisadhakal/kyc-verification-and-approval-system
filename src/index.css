@@ -83,6 +83,18 @@ body {
   scrollbar-width: none;
 }
 
+/* Scrollbar removal for full-screen pages (landing page & manager login)
+   – scrollbar is hidden while scrolling stays available */
+html.no-page-scroll,
+body.no-page-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html.no-page-scroll::-webkit-scrollbar,
+body.no-page-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
